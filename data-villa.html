@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0"/>
+<title>Data Villa — Dashboard Tim</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --pine:#1C3B32; --pine-deep:#0F241E; --pine-mid:#2B4F44;
+    --clay:#A8552E; --clay-bg:#F5E4DA;
+    --mist:#F2EFE6; --mist-2:#E8E1CE; --paper:#FBF9F3;
+    --gold:#C99A3E; --gold-bg:#F6EAD1;
+    --ink:#22241F; --ink-2:#5A5C52; --ink-3:#8B8D80;
+    --sage:#7C9683; --sage-bg:#E3E9E1; --line:#D8D2BE;
+    --red:#B23B3B; --red-bg:#F5E1E1;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html,body{height:100%;}
+  body{background:var(--mist); color:var(--ink); font-family:'Work Sans',sans-serif; -webkit-font-smoothing:antialiased; display:flex;}
+  h1,h2,h3{font-family:'Fraunces',serif; color:var(--pine-deep); letter-spacing:-0.01em;}
+  .mono{font-family:'IBM Plex Mono',monospace;}
+  a{color:inherit; text-decoration:none;}
+  button,input,select{font-family:inherit;}
+  button{cursor:pointer;}
+
+  /* ===== SIDEBAR ===== */
+  .sidebar{width:230px; flex-shrink:0; background:var(--pine-deep); color:rgba(255,255,255,.75); min-height:100vh; padding:22px 16px; display:flex; flex-direction:column;}
+  .s-brand{display:flex; align-items:center; gap:10px; font-family:'Fraunces',serif; font-weight:600; font-size:16px; color:#fff; padding:6px 8px 26px;}
+  .s-brand .dot{width:8px; height:8px; border-radius:50%; background:var(--gold);}
+  .s-tag{font-family:'IBM Plex Mono',monospace; font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:rgba(255,255,255,.4); padding:0 8px 14px;}
+  .s-nav a{display:flex; align-items:center; gap:10px; padding:11px 12px; border-radius:9px; font-size:13.5px; font-weight:500; margin-bottom:3px; color:rgba(255,255,255,.65);}
+  .s-nav a:hover{background:rgba(255,255,255,.06); color:#fff;}
+  .s-nav a.active{background:rgba(255,255,255,.12); color:#fff; font-weight:600;}
+  .s-nav .ic{width:18px; text-align:center;}
+  .s-divider{height:1px; background:rgba(255,255,255,.1); margin:16px 4px;}
+  .s-back{margin-top:auto; font-size:12.5px; color:rgba(255,255,255,.45); padding:10px 12px;}
+  .s-back:hover{color:#fff;}
+
+  /* ===== MAIN ===== */
+  .main{flex:1; min-width:0; padding:28px 32px 60px;}
+  .top-row{display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:16px; margin-bottom:22px;}
+  .eyebrow{font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--sage); margin-bottom:8px;}
+  .top-row h1{font-size:26px; font-weight:600;}
+  .actions{display:flex; gap:10px;}
+  .btn{padding:11px 18px; border-radius:9px; font-weight:600; font-size:13.5px; border:1px solid var(--line); background:var(--paper); color:var(--ink); display:flex; align-items:center; gap:7px;}
+  .btn-primary{background:var(--pine); color:#fff; border-color:var(--pine);}
+  .btn:hover{filter:brightness(0.97);}
+
+  /* reminder banner */
+  .reminder{background:var(--gold-bg); border:1px solid #E4C88A; border-radius:14px; padding:16px 20px; display:flex; align-items:center; gap:14px; margin-bottom:22px;}
+  .reminder .ric{font-size:20px;}
+  .reminder b{font-size:13.5px; color:#7A5B1C; display:block; margin-bottom:2px;}
+  .reminder span{font-size:12.5px; color:#8A6A22;}
+  .reminder button{margin-left:auto; background:none; border:0; color:#7A5B1C; font-size:18px;}
+
+  /* stat row */
+  .stat-row{display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:24px;}
+  .stat{background:var(--paper); border:1px solid var(--line); border-radius:14px; padding:18px 20px;}
+  .stat-num{font-family:'Fraunces',serif; font-size:26px; font-weight:600; color:var(--pine-deep);}
+  .stat-label{font-size:12px; color:var(--ink-2); margin-top:4px;}
+
+  /* toolbar */
+  .toolbar{display:flex; gap:10px; margin-bottom:16px; flex-wrap:wrap;}
+  .search{flex:1; min-width:200px; position:relative;}
+  .search input{width:100%; padding:11px 14px 11px 38px; border:1px solid var(--line); border-radius:9px; background:var(--paper); font-size:13.5px;}
+  .search svg{position:absolute; left:12px; top:50%; transform:translateY(-50%); width:15px; height:15px; color:var(--ink-3);}
+  select.filt{padding:10px 12px; border:1px solid var(--line); border-radius:9px; background:var(--paper); font-size:13px;}
+
+  /* table */
+  .table-wrap{background:var(--paper); border:1px solid var(--line); border-radius:14px; overflow:hidden;}
+  table{width:100%; border-collapse:collapse; font-size:13px;}
+  thead th{text-align:left; padding:13px 16px; background:var(--mist-2); font-size:11px; text-transform:uppercase; letter-spacing:.04em; color:var(--ink-2); font-weight:600; white-space:nowrap;}
+  tbody td{padding:13px 16px; border-top:1px solid var(--line); vertical-align:middle;}
+  tbody tr:hover{background:var(--mist);}
+  .unit-name{font-weight:600; color:var(--ink);}
+  .unit-sub{font-size:11.5px; color:var(--ink-3);}
+  .pill{font-family:'IBM Plex Mono',monospace; font-size:10.5px; padding:4px 9px; border-radius:100px; white-space:nowrap; display:inline-block;}
+  .pill.terbit{background:var(--sage-bg); color:var(--pine);}
+  .pill.proses{background:var(--gold-bg); color:#8A6A22;}
+  .pill.belum{background:var(--clay-bg); color:var(--clay);}
+  .row-edit{color:var(--clay); font-weight:600; font-size:12.5px;}
+
+  /* modal form */
+  .modal-overlay{position:fixed; inset:0; background:rgba(15,24,20,.55); z-index:300; display:none; align-items:flex-start; justify-content:center; padding:40px 20px; overflow-y:auto;}
+  .modal-overlay.open{display:flex;}
+  .modal{background:var(--paper); border-radius:18px; padding:30px; max-width:560px; width:100%;}
+  .modal h3{font-size:19px; margin-bottom:4px;}
+  .modal .sub{font-size:12.5px; color:var(--ink-3); margin-bottom:22px;}
+  .form-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+  .form-grid .full{grid-column:1/-1;}
+  .modal label{display:block; font-size:12px; font-weight:600; color:var(--ink-2); margin-bottom:6px;}
+  .modal input, .modal select{width:100%; padding:10px 12px; border:1px solid var(--line); border-radius:9px; font-size:13px; background:var(--mist);}
+
+  .checklist-block{margin-top:20px; padding-top:18px; border-top:1px solid var(--line);}
+  .checklist-block h4{font-size:13px; font-weight:600; color:var(--pine-deep); margin-bottom:12px; font-family:'Work Sans',sans-serif;}
+  .cl-item{display:flex; align-items:center; justify-content:space-between; padding:10px 0; border-bottom:1px solid var(--line);}
+  .cl-item:last-child{border-bottom:0;}
+  .cl-name{font-size:13px; color:var(--ink);}
+  .cl-item select{width:auto; padding:7px 10px; font-size:12px;}
+
+  .scan-box{margin-top:18px; border:1.5px dashed var(--line); border-radius:12px; padding:18px; text-align:center; background:var(--mist);}
+  .scan-box p{font-size:12.5px; color:var(--ink-3); margin-bottom:10px;}
+  .scan-btn{padding:9px 16px; background:var(--paper); border:1px solid var(--line); border-radius:9px; font-size:12.5px; font-weight:600;}
+
+  .modal-actions{display:flex; gap:10px; margin-top:24px;}
+  .modal-actions .btn{flex:1; justify-content:center;}
+
+  @media (max-width:900px){
+    .sidebar{position:fixed; left:-230px; z-index:200; transition:left .2s;}
+    .stat-row{grid-template-columns:1fr 1fr;}
+    .table-wrap{overflow-x:auto;}
+    .form-grid{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+<div id="pw-gate" style="position:fixed; inset:0; z-index:9999; background:#1C3B32; display:flex; align-items:center; justify-content:center; padding:20px; font-family:'Work Sans', sans-serif;">
+  <div style="background:#FBF9F3; padding:34px 30px; border-radius:16px; max-width:340px; width:100%; text-align:center; box-shadow:0 10px 40px rgba(0,0,0,.3);">
+    <div style="font-size:28px; margin-bottom:10px;">🔒</div>
+    <div style="font-weight:700; font-size:17px; margin-bottom:6px; color:#1C3B32;">Akses Tim &amp; Dinas</div>
+    <div style="font-size:13px; color:#767267; margin-bottom:18px; line-height:1.5;">Halaman ini khusus tim KKN-T 34 dan DPMPTSP. Masukkan password untuk melanjutkan.</div>
+    <input id="pw-input" type="password" placeholder="Password" style="width:100%; padding:11px 13px; border:1px solid #ddd8ca; border-radius:9px; font-size:14px; margin-bottom:10px; box-sizing:border-box; font-family:inherit;">
+    <div id="pw-error" style="color:#A8552E; font-size:12px; margin-bottom:10px; display:none;">Password salah, coba lagi.</div>
+    <button id="pw-submit" style="width:100%; padding:11px; background:#C99A3E; color:#fff; border:0; border-radius:9px; font-weight:600; font-size:14px; cursor:pointer; font-family:inherit;">Masuk</button>
+    <a href="index.html" style="display:block; margin-top:14px; font-size:12.5px; color:#767267;">← Kembali ke situs publik</a>
+  </div>
+</div>
+<script>
+(function(){
+  // Ganti password default ini sebelum deploy! Bagikan hanya ke tim & DPMPTSP.
+  const PASSWORD = "kknt34batu";
+  const gate = document.getElementById('pw-gate');
+  if (sessionStorage.getItem('giz_auth') === 'ok') { gate.style.display = 'none'; return; }
+  function tryLogin(){
+    const val = document.getElementById('pw-input').value;
+    if (val === PASSWORD) {
+      sessionStorage.setItem('giz_auth', 'ok');
+      gate.style.display = 'none';
+    } else {
+      document.getElementById('pw-error').style.display = 'block';
+    }
+  }
+  document.getElementById('pw-submit').addEventListener('click', tryLogin);
+  document.getElementById('pw-input').addEventListener('keydown', e => { if(e.key==='Enter') tryLogin(); });
+})();
+</script>
+
+<aside class="sidebar">
+  <div class="s-brand"><span class="dot"></span>KKN-T 34</div>
+  <div class="s-tag">Dashboard Tim</div>
+  <nav class="s-nav">
+    <a href="#" class="active"><span class="ic">🏠</span>Data Villa</a>
+    <a href="operasional.html"><span class="ic">📅</span>Operasional</a>
+    <a href="laporan.html"><span class="ic">📊</span>Laporan & Pajak</a>
+  </nav>
+  <div class="s-divider"></div>
+  <a href="index.html" class="s-back">← Kembali ke situs publik</a>
+</aside>
+
+<div class="main">
+  <div class="top-row">
+    <div>
+      <div class="eyebrow">Internal · Tim KKN & DPMPTSP</div>
+      <h1>Data Villa & Homestay</h1>
+    </div>
+    <div class="actions">
+      <button class="btn" id="btn-import">📥 Import Excel/CSV</button>
+      <button class="btn btn-primary" id="btn-add">+ Tambah Unit</button>
+    </div>
+  </div>
+
+  <div class="reminder" id="reminder" style="display:none;">
+    <div class="ric">⚠️</div>
+    <div>
+      <b id="reminder-title"></b>
+      <span id="reminder-sub"></span>
+    </div>
+    <button onclick="document.getElementById('reminder').style.display='none'">✕</button>
+  </div>
+
+  <div class="stat-row">
+    <div class="stat"><div class="stat-num" id="stat-total">0</div><div class="stat-label">Total unit terdata</div></div>
+    <div class="stat"><div class="stat-num" id="stat-lengkap">0</div><div class="stat-label">Lengkap berizin</div></div>
+    <div class="stat"><div class="stat-num" id="stat-proses">0</div><div class="stat-label">Dalam pendampingan</div></div>
+    <div class="stat"><div class="stat-num" id="stat-belum">0</div><div class="stat-label">Belum diproses</div></div>
+  </div>
+
+  <div class="toolbar">
+    <div class="search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>
+      <input id="q" placeholder="Cari nama unit atau owner...">
+    </div>
+    <select class="filt" id="f-kec">
+      <option value="">Semua Kecamatan</option>
+      <option>Batu</option><option>Junrejo</option><option>Bumiaji</option>
+    </select>
+    <select class="filt" id="f-status">
+      <option value="">Semua Status NIB</option>
+      <option value="terbit">Terbit</option><option value="proses">Proses</option><option value="belum">Belum</option>
+    </select>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Unit</th><th>Kontak Owner</th><th>NIB</th><th>Sertifikat Standar</th><th>PBG/SLF</th><th></th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <h3 id="m-title">Tambah Unit Baru</h3>
+    <div class="sub">Isi hasil survei lapangan. Semua data bisa diedit lagi nanti.</div>
+
+    <div class="form-grid">
+      <div class="full"><label>Nama Usaha</label><input id="m-nama" placeholder="Contoh: Villa Kusuma Estate"></div>
+      <div><label>Kecamatan</label><select id="m-kec"><option>Batu</option><option>Junrejo</option><option>Bumiaji</option></select></div>
+      <div><label>Desa</label><input id="m-desa" placeholder="Contoh: Songgokerto"></div>
+      <div><label>Jumlah Kamar</label><input id="m-kamar" type="number" placeholder="6"></div>
+      <div><label>Kontak Owner (WA)</label><input id="m-kontak" placeholder="0812xxxxxxx"></div>
+    </div>
+
+    <div class="checklist-block">
+      <h4>Checklist Perizinan</h4>
+      <div class="cl-item">
+        <span class="cl-name">NIB (KBLI Akomodasi)</span>
+        <select id="cl-nib"><option value="belum">Belum</option><option value="proses">Proses</option><option value="terbit">Terbit</option></select>
+      </div>
+      <div class="cl-item">
+        <span class="cl-name">Sertifikat Standar Usaha Pariwisata</span>
+        <select id="cl-sert"><option value="belum">Belum</option><option value="proses">Proses</option><option value="terbit">Terbit</option></select>
+      </div>
+      <div class="cl-item">
+        <span class="cl-name">PBG / SLF</span>
+        <select id="cl-pbg"><option value="belum">Belum</option><option value="proses">Proses</option><option value="terbit">Terbit</option></select>
+      </div>
+    </div>
+
+    <div class="scan-box">
+      <p>📄 Scan dokumen (KTP owner / draft sertifikat) untuk auto-isi data</p>
+      <input type="file" id="scan-file" accept="image/*,.pdf" style="display:none;">
+      <button class="scan-btn" id="scan-btn">Pilih File & Scan</button>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn" id="m-cancel">Batal</button>
+      <button class="btn btn-primary" id="m-save">Simpan Unit</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ====== SUMBER DATA: GOOGLE SHEETS (lihat SETUP_GOOGLE_SHEETS.md) ======
+const SHEET_ID = "1ihYXCjaVtsBzPI_RVZx3JJh4sB_sN_d8od9FWuCd064";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxB7D2CHe92Wbi8WygPlyQn7tjDjeKsQkmfsP6lrk-7MeTh36IjFfrltB6oS_Tyt4H7vw/exec";
+const VILLA_TAB = "Villa";
+
+async function fetchSheetTab(tabName){
+  const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(tabName)}`;
+  const res = await fetch(url);
+  if(!res.ok) throw new Error('Gagal mengambil data dari Google Sheets');
+  return parseCSV(await res.text());
+}
+
+function parseCSV(text){
+  const rows = []; let row = [], field = '', inQuotes = false;
+  for(let i=0;i<text.length;i++){
+    const c = text[i], next = text[i+1];
+    if(inQuotes){
+      if(c==='"' && next==='"'){ field+='"'; i++; }
+      else if(c==='"'){ inQuotes=false; }
+      else field+=c;
+    } else {
+      if(c==='"') inQuotes=true;
+      else if(c===','){ row.push(field); field=''; }
+      else if(c==='\n' || c==='\r'){
+        if(field!=='' || row.length){ row.push(field); rows.push(row); row=[]; field=''; }
+        if(c==='\r' && next==='\n') i++;
+      } else field+=c;
+    }
+  }
+  if(field!=='' || row.length){ row.push(field); rows.push(row); }
+  if(!rows.length) return [];
+  const headers = rows.shift().map(h=>h.trim());
+  return rows.filter(r=>r.some(v=>v!=='')).map(r=>{
+    const obj = {}; headers.forEach((h,idx)=> obj[h] = (r[idx]||'').trim()); return obj;
+  });
+}
+
+async function loadVillaData(){
+  if(SHEET_ID === "1ihYXCjaVtsBzPI_RVZx3JJh4sB_sN_d8od9FWuCd064") return [];
+  try{
+    const rows = await fetchSheetTab(VILLA_TAB);
+    return rows.filter(r=>r.nama).map(r=>({
+      nama: r.nama, desa: r.desa||'-', kec: r.kec||'-',
+      kamar: Number(r.kamar)||0, kontak: r.kontak||'-',
+      nib: (r.nib||'belum').toLowerCase(), sert: (r.sert||'belum').toLowerCase(), pbg: (r.pbg||'belum').toLowerCase(),
+    }));
+  } catch(err){ console.error(err); return []; }
+}
+
+async function submitToSheet(sheetName, data){
+  if(SCRIPT_URL === "https://script.google.com/macros/s/AKfycbxB7D2CHe92Wbi8WygPlyQn7tjDjeKsQkmfsP6lrk-7MeTh36IjFfrltB6oS_Tyt4H7vw/exec") return false;
+  try{
+    await fetch(SCRIPT_URL, {
+      method:'POST',
+      headers:{'Content-Type':'text/plain;charset=utf-8'},
+      body: JSON.stringify({sheet: sheetName, data})
+    });
+    return true;
+  } catch(err){ console.error(err); return false; }
+}
+// ====== AKHIR SUMBER DATA ======
+
+let DATA = [];
+
+function pillClass(v){ return v==='terbit'?'terbit':v==='proses'?'proses':'belum'; }
+function pillLabel(v){ return v==='terbit'?'Terbit':v==='proses'?'Proses':'Belum'; }
+
+function updateStats(){
+  const total = DATA.length;
+  const lengkap = DATA.filter(d=>d.nib==='terbit'&&d.sert==='terbit'&&d.pbg==='terbit').length;
+  const belumSama = DATA.filter(d=>d.nib==='belum'&&d.sert==='belum'&&d.pbg==='belum').length;
+  const proses = total - lengkap - belumSama;
+  document.getElementById('stat-total').textContent = total;
+  document.getElementById('stat-lengkap').textContent = lengkap;
+  document.getElementById('stat-proses').textContent = proses;
+  document.getElementById('stat-belum').textContent = belumSama;
+
+  const incomplete = DATA.filter(d=>d.nib!=='terbit'||d.sert!=='terbit'||d.pbg!=='terbit');
+  const reminder = document.getElementById('reminder');
+  if(incomplete.length > 0){
+    reminder.style.display = 'flex';
+    document.getElementById('reminder-title').textContent = `${incomplete.length} homestay belum lengkap dokumennya`;
+    document.getElementById('reminder-sub').textContent = incomplete.slice(0,3).map(d=>d.nama).join(', ') + (incomplete.length>3 ? `, dan ${incomplete.length-3} lainnya` : '') + ' masih ada dokumen berstatus "belum/proses"';
+  } else {
+    reminder.style.display = 'none';
+  }
+}
+
+function render(){
+  const q = document.getElementById('q').value.toLowerCase();
+  const fk = document.getElementById('f-kec').value;
+  const fs = document.getElementById('f-status').value;
+  const filtered = DATA.filter(d=>{
+    if(q && !d.nama.toLowerCase().includes(q) && !d.desa.toLowerCase().includes(q)) return false;
+    if(fk && d.kec!==fk) return false;
+    if(fs && d.nib!==fs) return false;
+    return true;
+  });
+  updateStats();
+  if(filtered.length === 0){
+    document.getElementById('tbody').innerHTML = `<tr><td colspan="6" style="text-align:center; color:var(--ink-3); padding:30px;">Belum ada data. Klik "+ Tambah Unit" untuk mulai mengisi.</td></tr>`;
+    return;
+  }
+  document.getElementById('tbody').innerHTML = filtered.map(d=>`
+    <tr>
+      <td><div class="unit-name">${d.nama}</div><div class="unit-sub">${d.desa}, Kec. ${d.kec}</div></td>
+      <td class="mono">${d.kontak}</td>
+      <td><span class="pill ${pillClass(d.nib)}">${pillLabel(d.nib)}</span></td>
+      <td><span class="pill ${pillClass(d.sert)}">${pillLabel(d.sert)}</span></td>
+      <td><span class="pill ${pillClass(d.pbg)}">${pillLabel(d.pbg)}</span></td>
+      <td><a class="row-edit">Edit</a></td>
+    </tr>
+  `).join('');
+}
+['q','f-kec','f-status'].forEach(id=>document.getElementById(id).addEventListener('input', render));
+
+(async function init(){
+  document.getElementById('tbody').innerHTML = '<tr><td colspan="6" style="text-align:center; color:var(--ink-3); padding:30px;">Memuat data...</td></tr>';
+  DATA = await loadVillaData();
+  render();
+})();
+
+const modal = document.getElementById('modal');
+document.getElementById('btn-add').addEventListener('click', ()=>{ document.getElementById('m-title').textContent='Tambah Unit Baru'; modal.classList.add('open'); });
+document.getElementById('btn-import').addEventListener('click', ()=>alert('Pilih file Excel/CSV berisi kolom: nama, desa, kecamatan, kamar, kontak — sistem akan mengisi otomatis.'));
+document.getElementById('m-cancel').addEventListener('click', ()=>modal.classList.remove('open'));
+modal.addEventListener('click', e=>{ if(e.target===modal) modal.classList.remove('open'); });
+
+document.getElementById('m-save').addEventListener('click', async ()=>{
+  const nama = document.getElementById('m-nama').value.trim();
+  if(!nama){ document.getElementById('m-nama').focus(); return; }
+  const saveBtn = document.getElementById('m-save');
+  const newUnit = {
+    nama, desa: document.getElementById('m-desa').value || '-',
+    kec: document.getElementById('m-kec').value,
+    kamar: Number(document.getElementById('m-kamar').value) || 0,
+    kontak: document.getElementById('m-kontak').value || '-',
+    nib: document.getElementById('cl-nib').value,
+    sert: document.getElementById('cl-sert').value,
+    pbg: document.getElementById('cl-pbg').value,
+    tanggal_survei: new Date().toISOString().slice(0,10),
+  };
+  saveBtn.textContent = 'Menyimpan...'; saveBtn.disabled = true;
+  const ok = await submitToSheet('Villa', newUnit);
+  saveBtn.textContent = 'Simpan Unit'; saveBtn.disabled = false;
+  if(!ok){
+    alert('Google Sheets belum disambungkan (lihat SETUP_GOOGLE_SHEETS.md). Data ini hanya tampil sementara di layar, belum tersimpan permanen.');
+  }
+  DATA.unshift(newUnit);
+  modal.classList.remove('open');
+  render();
+});
+
+document.getElementById('scan-btn').addEventListener('click', ()=>document.getElementById('scan-file').click());
+document.getElementById('scan-file').addEventListener('change', e=>{
+  if(e.target.files[0]){
+    document.getElementById('scan-btn').textContent = '✓ Dokumen ter-scan — data terisi otomatis';
+  }
+});
+</script>
+</body>
+</html>
