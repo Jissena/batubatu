@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0"/>
+<title>Direktori — KKN-T 34</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
+<style>
+  :root{
+    --pine:#1C3B32; --pine-deep:#0F241E; --pine-mid:#2B4F44;
+    --clay:#A8552E; --clay-light:#C97748; --clay-bg:#F5E4DA;
+    --mist:#F2EFE6; --mist-2:#E8E1CE; --paper:#FBF9F3;
+    --gold:#C99A3E; --gold-bg:#F6EAD1;
+    --ink:#22241F; --ink-2:#5A5C52; --ink-3:#8B8D80;
+    --sage:#7C9683; --sage-bg:#E3E9E1; --line:#D8D2BE;
+    --r:14px; --r-sm:9px;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html,body{height:100%;}
+  body{background:var(--mist); color:var(--ink); font-family:'Work Sans',sans-serif; -webkit-font-smoothing:antialiased;}
+  h1,h2,h3{font-family:'Fraunces',serif; color:var(--pine-deep); letter-spacing:-0.01em;}
+  .mono{font-family:'IBM Plex Mono',monospace;}
+  a{color:inherit; text-decoration:none;}
+  button{font-family:inherit;}
+
+  /* ===== NAV (same as Beranda) ===== */
+  .nav{position:sticky; top:0; z-index:100; background:rgba(242,239,230,0.95); backdrop-filter:blur(8px); border-bottom:1px solid var(--line);}
+  .nav-inner{max-width:1400px; margin:0 auto; padding:14px 28px; display:flex; align-items:center; justify-content:space-between; gap:20px;}
+  .brand{display:flex; align-items:center; gap:10px; font-family:'Fraunces',serif; font-weight:600; font-size:18px; color:var(--pine-deep);}
+  .brand-mark{width:32px; height:32px; border-radius:8px; background:var(--pine); display:flex; align-items:center; justify-content:center; flex-shrink:0;}
+  .brand-mark svg{width:18px; height:18px;}
+  .nav-links{display:flex; align-items:center; gap:6px; font-size:14px; font-weight:500;}
+  .nav-links a{padding:8px 13px; border-radius:8px; color:var(--ink-2); transition:background .15s, color .15s;}
+  .nav-links a:hover{background:var(--mist-2); color:var(--pine-deep);}
+  .nav-links a.active{color:var(--pine-deep); background:var(--paper); box-shadow:inset 0 0 0 1px var(--line);}
+  .nav-cta{padding:9px 16px; background:var(--clay); color:#fff; border-radius:8px; font-weight:600; font-size:13px; white-space:nowrap;}
+  @media (max-width:860px){ .nav-links,.nav-cta{display:none;} }
+
+  /* ===== HEADER ===== */
+  .dir-head{max-width:1400px; margin:0 auto; padding:32px 28px 0;}
+  .eyebrow{font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--sage); margin-bottom:8px;}
+  .dir-head h1{font-size:clamp(24px,3vw,32px); font-weight:600; margin-bottom:6px;}
+  .dir-head p{color:var(--ink-2); font-size:14px; max-width:560px; margin-bottom:22px;}
+
+  /* ===== TOOLBAR ===== */
+  .toolbar{max-width:1400px; margin:0 auto; padding:0 28px 20px; display:flex; gap:10px; flex-wrap:wrap; align-items:center;}
+  .search{flex:1; min-width:220px; position:relative;}
+  .search input{width:100%; padding:12px 14px 12px 40px; border:1px solid var(--line); border-radius:10px; background:var(--paper); font-size:14px; font-family:inherit; color:var(--ink);}
+  .search input:focus{outline:2px solid var(--pine); outline-offset:-1px;}
+  .search svg{position:absolute; left:13px; top:50%; transform:translateY(-50%); width:16px; height:16px; color:var(--ink-3);}
+  select.filt{padding:11px 14px; border:1px solid var(--line); border-radius:10px; background:var(--paper); font-size:13.5px; color:var(--ink); font-family:inherit; cursor:pointer;}
+  .view-toggle{display:flex; border:1px solid var(--line); border-radius:10px; overflow:hidden; background:var(--paper);}
+  .view-toggle button{padding:10px 16px; background:none; border:0; font-size:13px; font-weight:600; color:var(--ink-3); cursor:pointer; display:flex; align-items:center; gap:6px;}
+  .view-toggle button.on{background:var(--pine); color:#fff;}
+
+  .status-legend{max-width:1400px; margin:0 auto; padding:0 28px 18px; display:flex; gap:18px; flex-wrap:wrap;}
+  .leg{display:flex; align-items:center; gap:6px; font-size:12.5px; color:var(--ink-2);}
+  .leg .dot{width:9px; height:9px; border-radius:50%;}
+  .leg .dot.berizin{background:var(--pine);}
+  .leg .dot.proses{background:var(--gold);}
+  .leg .dot.belum{background:var(--clay);}
+
+  /* ===== LAYOUT: list + map ===== */
+  .dir-body{max-width:1400px; margin:0 auto; padding:0 28px 60px; display:grid; grid-template-columns:420px 1fr; gap:20px; align-items:start;}
+  .list-panel{max-height:calc(100vh - 220px); overflow-y:auto; padding-right:4px;}
+  .list-count{font-size:12.5px; color:var(--ink-3); margin-bottom:12px; padding-left:2px;}
+
+  .card{background:var(--paper); border:1px solid var(--line); border-radius:14px; padding:16px; margin-bottom:12px; cursor:pointer; transition:border-color .15s, box-shadow .15s;}
+  .card:hover{border-color:var(--pine-mid); box-shadow:0 8px 20px -12px rgba(15,36,30,.3);}
+  .card.selected{border-color:var(--pine); box-shadow:0 0 0 2px var(--pine);}
+  .card-top{display:flex; justify-content:space-between; align-items:flex-start; gap:10px; margin-bottom:8px;}
+  .card-top h4{font-size:15px; font-weight:600; color:var(--ink); font-family:'Work Sans',sans-serif;}
+  .badge{font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:.02em; padding:4px 8px; border-radius:100px; white-space:nowrap; font-weight:500;}
+  .badge.berizin{background:var(--sage-bg); color:var(--pine);}
+  .badge.proses{background:var(--gold-bg); color:#8A6A22;}
+  .badge.belum{background:var(--clay-bg); color:var(--clay);}
+  .card-meta{display:flex; flex-wrap:wrap; gap:12px; font-size:12.5px; color:var(--ink-2); margin-bottom:8px;}
+  .card-meta span{display:flex; align-items:center; gap:4px;}
+  .card-desa{font-size:12px; color:var(--ink-3);}
+
+  .map-wrap{position:sticky; top:80px; height:calc(100vh - 220px); border-radius:16px; overflow:hidden; border:1px solid var(--line); box-shadow:0 20px 50px -30px rgba(15,36,30,.35);}
+  #map{width:100%; height:100%;}
+  .leaflet-popup-content-wrapper{border-radius:12px; font-family:'Work Sans',sans-serif;}
+  .popup-title{font-family:'Fraunces',serif; font-weight:600; font-size:14px; color:var(--pine-deep); margin-bottom:4px;}
+  .popup-meta{font-size:12px; color:var(--ink-2);}
+
+  @media (max-width:1000px){
+    .dir-body{grid-template-columns:1fr;}
+    .map-wrap{position:relative; top:0; height:340px; order:-1;}
+    .list-panel{max-height:none;}
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="brand">
+      <span class="brand-mark">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 12L12 4l9 8" stroke="#F2EFE6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M5.5 10.5V19a1 1 0 0 0 1 1H10v-5h4v5h3.5a1 1 0 0 0 1-1v-8.5" stroke="#F2EFE6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+      KKN-T 34
+    </div>
+    <div class="nav-links">
+      <a href="index.html">Beranda</a>
+      <a href="#" class="active">Direktori</a>
+      <a href="media.html">Media</a>
+      <a href="forum.html">Forum</a>
+      <a href="tentang.html">Tentang Kami</a>
+    </div>
+    <a href="#cari" class="nav-cta">Cek Status Izin</a>
+  </div>
+</nav>
+
+<div class="dir-head">
+  <div class="eyebrow" id="eyebrow-count">0 unit terdata</div>
+  <h1>Direktori Villa & Homestay</h1>
+  <p>Hasil pendataan lapangan tim KKN di seluruh kecamatan Kota Batu. Cari unit Anda, lihat sebarannya di peta, dan cek status perizinannya.</p>
+</div>
+
+<div class="toolbar">
+  <div class="search" id="cari">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>
+    <input id="q" type="text" placeholder="Cari nama villa atau homestay...">
+  </div>
+  <select class="filt" id="f-kec">
+    <option value="">Semua Kecamatan</option>
+  </select>
+  <select class="filt" id="f-status">
+    <option value="">Semua Status</option>
+    <option value="berizin">Berizin</option>
+    <option value="proses">Dalam Pendampingan</option>
+    <option value="belum">Belum Berizin</option>
+  </select>
+  <select class="filt" id="f-kap">
+    <option value="">Semua Kapasitas</option>
+    <option value="1">1–3 kamar</option>
+    <option value="2">4–6 kamar</option>
+    <option value="3">7+ kamar</option>
+  </select>
+</div>
+
+<div class="status-legend">
+  <div class="leg"><span class="dot berizin"></span> Berizin <span class="mono" id="leg-berizin">(0)</span></div>
+  <div class="leg"><span class="dot proses"></span> Dalam pendampingan <span class="mono" id="leg-proses">(0)</span></div>
+  <div class="leg"><span class="dot belum"></span> Belum berizin <span class="mono" id="leg-belum">(0)</span></div>
+</div>
+
+<div class="dir-body">
+  <div class="list-panel">
+    <div class="list-count mono" id="list-count">— unit ditemukan</div>
+    <div id="cards"></div>
+  </div>
+  <div class="map-wrap">
+    <div id="map"></div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+// ====== SUMBER DATA: GOOGLE SHEETS ======
+// 1. Ganti SHEET_ID dengan ID spreadsheet kalian (lihat SETUP_GOOGLE_SHEETS.md)
+// 2. Pastikan spreadsheet di-share "Anyone with the link" sebagai Viewer
+// 3. Tab/sheet bernama "Villa" berisi kolom: nama, desa, kec, kamar, harga, kontak, nib, sert, pbg, lat, lng, tanggal_survei
+const SHEET_ID = "1ihYXCjaVtsBzPI_RVZx3JJh4sB_sN_d8od9FWuCd064";
+const VILLA_TAB = "Villa";
+
+async function fetchSheetTab(tabName){
+  const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(tabName)}`;
+  const res = await fetch(url);
+  if(!res.ok) throw new Error('Gagal mengambil data dari Google Sheets');
+  return parseCSV(await res.text());
+}
+
+function parseCSV(text){
+  const rows = []; let row = [], field = '', inQuotes = false;
+  for(let i=0;i<text.length;i++){
+    const c = text[i], next = text[i+1];
+    if(inQuotes){
+      if(c==='"' && next==='"'){ field+='"'; i++; }
+      else if(c==='"'){ inQuotes=false; }
+      else field+=c;
+    } else {
+      if(c==='"') inQuotes=true;
+      else if(c===','){ row.push(field); field=''; }
+      else if(c==='\n' || c==='\r'){
+        if(field!=='' || row.length){ row.push(field); rows.push(row); row=[]; field=''; }
+        if(c==='\r' && next==='\n') i++;
+      } else field+=c;
+    }
+  }
+  if(field!=='' || row.length){ row.push(field); rows.push(row); }
+  if(!rows.length) return [];
+  const headers = rows.shift().map(h=>h.trim());
+  return rows.filter(r=>r.some(v=>v!=='')).map(r=>{
+    const obj = {}; headers.forEach((h,idx)=> obj[h] = (r[idx]||'').trim()); return obj;
+  });
+}
+
+async function loadVillaData(){
+  try{
+    const rows = await fetchSheetTab(VILLA_TAB);
+    return rows.filter(r=>r.nama).map((r,i)=>{
+      const nib=(r.nib||'belum').toLowerCase(), sert=(r.sert||'belum').toLowerCase(), pbg=(r.pbg||'belum').toLowerCase();
+      const status = (nib==='terbit'&&sert==='terbit'&&pbg==='terbit') ? 'berizin' : ((nib==='belum'&&sert==='belum'&&pbg==='belum') ? 'belum' : 'proses');
+      return {
+        id: i+1, nama: r.nama, desa: r.desa||'-', kec: r.kec||'-',
+        kamar: Number(r.kamar)||0, harga: r.harga||'-', kontak: r.kontak||'-',
+        nib, sert, pbg, status,
+        lat: Number(r.lat), lng: Number(r.lng),
+      };
+    });
+  } catch(err){ console.error(err); return []; }
+}
+// ====== AKHIR SUMBER DATA ======
+
+let DATA = [];
+
+const statusLabel = {berizin:"Berizin", proses:"Proses", belum:"Belum Berizin"};
+
+const map = L.map('map', {zoomControl:true}).setView([-7.865, 112.523], 13);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution:'&copy; OpenStreetMap contributors', maxZoom:18
+}).addTo(map);
+
+const colors = {berizin:'#1C3B32', proses:'#C99A3E', belum:'#A8552E'};
+let markers = {};
+
+function makeIcon(status, active){
+  const c = colors[status];
+  return L.divIcon({
+    className:'',
+    html:`<div style="width:${active?22:16}px;height:${active?22:16}px;border-radius:50%;background:${c};border:2.5px solid #FBF9F3;box-shadow:0 2px 6px rgba(0,0,0,.35);"></div>`,
+    iconSize:[active?22:16,active?22:16]
+  });
+}
+
+function addMarkers(){
+  const coords = [];
+  DATA.forEach(d=>{
+    if(!isFinite(d.lat) || !isFinite(d.lng)) return;
+    const m = L.marker([d.lat,d.lng], {icon:makeIcon(d.status,false)}).addTo(map);
+    m.bindPopup(`<div class="popup-title">${d.nama}</div><div class="popup-meta">${d.desa}, Kec. ${d.kec} · ${d.kamar} kamar · ${statusLabel[d.status]}</div>`);
+    m.on('click', ()=>selectCard(d.id, false));
+    markers[d.id] = m;
+    coords.push([d.lat,d.lng]);
+  });
+  if(coords.length){
+    map.fitBounds(coords, {padding:[40,40], maxZoom:14});
+  }
+}
+
+let selectedId = null;
+function selectCard(id, panMap){
+  selectedId = id;
+  document.querySelectorAll('.card').forEach(c=>c.classList.toggle('selected', +c.dataset.id === id));
+  Object.entries(markers).forEach(([mid,m])=>{
+    const d = DATA.find(x=>x.id==mid);
+    m.setIcon(makeIcon(d.status, +mid===id));
+  });
+  if(panMap){
+    const d = DATA.find(x=>x.id===id);
+    map.flyTo([d.lat,d.lng], 15, {duration:0.6});
+    markers[id].openPopup();
+  }
+}
+
+function render(){
+  const q = document.getElementById('q').value.toLowerCase();
+  const fk = document.getElementById('f-kec').value;
+  const fs = document.getElementById('f-status').value;
+  const fkap = document.getElementById('f-kap').value;
+
+  const filtered = DATA.filter(d=>{
+    if(q && !d.nama.toLowerCase().includes(q) && !d.desa.toLowerCase().includes(q)) return false;
+    if(fk && d.kec !== fk) return false;
+    if(fs && d.status !== fs) return false;
+    if(fkap){
+      if(fkap==='1' && !(d.kamar<=3)) return false;
+      if(fkap==='2' && !(d.kamar>=4 && d.kamar<=6)) return false;
+      if(fkap==='3' && !(d.kamar>=7)) return false;
+    }
+    return true;
+  });
+
+  document.getElementById('eyebrow-count').textContent = `${DATA.length} unit terdata`;
+  document.getElementById('list-count').textContent = filtered.length ? `${filtered.length} unit ditemukan` : 'Belum ada data';
+  const wrap = document.getElementById('cards');
+  if(filtered.length === 0){
+    wrap.innerHTML = '<div style="padding:24px; text-align:center; color:var(--ink-3); font-size:13px; background:var(--paper); border:1px solid var(--line); border-radius:14px;">Belum ada data villa/homestay.<br>Tambahkan lewat Dashboard Tim &gt; Data Villa.</div>';
+    return;
+  }
+  wrap.innerHTML = filtered.map(d=>`
+    <div class="card ${d.id===selectedId?'selected':''}" data-id="${d.id}">
+      <div class="card-top">
+        <h4>${d.nama}</h4>
+        <span class="badge ${d.status}">${statusLabel[d.status]}</span>
+      </div>
+      <div class="card-meta">
+        <span>🛏 ${d.kamar} kamar</span>
+        <span class="mono">${d.harga}</span>
+      </div>
+      <div class="card-desa">${d.desa}, Kec. ${d.kec}</div>
+    </div>
+  `).join('');
+
+  wrap.querySelectorAll('.card').forEach(c=>{
+    c.addEventListener('click', ()=>selectCard(+c.dataset.id, true));
+  });
+
+  // dim markers not in filtered set
+  const filteredIds = new Set(filtered.map(d=>d.id));
+  Object.entries(markers).forEach(([mid,m])=>{
+    const el = m.getElement();
+    if(el) el.style.opacity = filteredIds.has(+mid) ? '1' : '0.15';
+  });
+}
+
+['q','f-kec','f-status','f-kap'].forEach(id=>{
+  document.getElementById(id).addEventListener('input', render);
+});
+
+function populateKecFilter(){
+  const sel = document.getElementById('f-kec');
+  const kecList = [...new Set(DATA.map(d=>d.kec).filter(k=>k && k!=='-'))].sort();
+  kecList.forEach(k=>{
+    const opt = document.createElement('option');
+    opt.value = k; opt.textContent = `Kec. ${k}`;
+    sel.appendChild(opt);
+  });
+}
+
+function updateLegendCounts(){
+  document.getElementById('leg-berizin').textContent = `(${DATA.filter(d=>d.status==='berizin').length})`;
+  document.getElementById('leg-proses').textContent = `(${DATA.filter(d=>d.status==='proses').length})`;
+  document.getElementById('leg-belum').textContent = `(${DATA.filter(d=>d.status==='belum').length})`;
+}
+
+(async function init(){
+  document.getElementById('cards').innerHTML = '<div style="padding:24px; text-align:center; color:var(--ink-3); font-size:13px;">Memuat data...</div>';
+  DATA = await loadVillaData();
+  populateKecFilter();
+  updateLegendCounts();
+  addMarkers();
+  render();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0"/>
+<title>Forum — KKN-T 34</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --pine:#1C3B32; --pine-deep:#0F241E; --pine-mid:#2B4F44;
+    --clay:#A8552E; --clay-light:#C97748; --clay-bg:#F5E4DA;
+    --mist:#F2EFE6; --mist-2:#E8E1CE; --paper:#FBF9F3;
+    --gold:#C99A3E; --gold-bg:#F6EAD1;
+    --ink:#22241F; --ink-2:#5A5C52; --ink-3:#8B8D80;
+    --sage:#7C9683; --sage-bg:#E3E9E1; --line:#D8D2BE;
+    --r:14px; --r-sm:9px;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html,body{height:100%;}
+  body{background:var(--mist); color:var(--ink); font-family:'Work Sans',sans-serif; -webkit-font-smoothing:antialiased;}
+  h1,h2,h3{font-family:'Fraunces',serif; color:var(--pine-deep); letter-spacing:-0.01em;}
+  .mono{font-family:'IBM Plex Mono',monospace;}
+  a{color:inherit; text-decoration:none;}
+  button,input,textarea{font-family:inherit;}
+  button{cursor:pointer;}
+
+  .nav{position:sticky; top:0; z-index:100; background:rgba(242,239,230,0.95); backdrop-filter:blur(8px); border-bottom:1px solid var(--line);}
+  .nav-inner{max-width:1180px; margin:0 auto; padding:14px 28px; display:flex; align-items:center; justify-content:space-between; gap:20px;}
+  .brand{display:flex; align-items:center; gap:10px; font-family:'Fraunces',serif; font-weight:600; font-size:18px; color:var(--pine-deep);}
+  .brand-mark{width:32px; height:32px; border-radius:8px; background:var(--pine); display:flex; align-items:center; justify-content:center; flex-shrink:0;}
+  .brand-mark svg{width:18px; height:18px;}
+  .nav-links{display:flex; align-items:center; gap:6px; font-size:14px; font-weight:500;}
+  .nav-links a{padding:8px 13px; border-radius:8px; color:var(--ink-2); transition:background .15s, color .15s;}
+  .nav-links a:hover{background:var(--mist-2); color:var(--pine-deep);}
+  .nav-links a.active{color:var(--pine-deep); background:var(--paper); box-shadow:inset 0 0 0 1px var(--line);}
+  .nav-cta{padding:9px 16px; background:var(--clay); color:#fff; border-radius:8px; font-weight:600; font-size:13px; white-space:nowrap;}
+  @media (max-width:860px){ .nav-links{display:none;} }
+
+  .wrap{max-width:1180px; margin:0 auto; padding:0 28px;}
+  .f-head{padding:32px 0 4px; display:flex; justify-content:space-between; align-items:flex-end; gap:16px; flex-wrap:wrap;}
+  .eyebrow{font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--sage); margin-bottom:8px;}
+  .f-head h1{font-size:clamp(24px,3vw,32px); font-weight:600;}
+  .who{display:flex; align-items:center; gap:10px; font-size:13px; color:var(--ink-2);}
+  .who .av{width:28px; height:28px; border-radius:50%; background:var(--sage); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:12px;}
+  .who button{background:none; border:0; color:var(--clay); font-weight:600; font-size:12.5px; text-decoration:underline;}
+
+  .f-body{display:grid; grid-template-columns:260px 1fr; gap:24px; padding:24px 0 70px;}
+
+  /* sidebar categories */
+  .cat-list{display:flex; flex-direction:column; gap:6px;}
+  .cat-item{display:flex; align-items:center; justify-content:space-between; padding:13px 14px; border-radius:12px; border:1px solid transparent; cursor:pointer; transition:background .15s,border-color .15s;}
+  .cat-item:hover{background:var(--mist-2);}
+  .cat-item.on{background:var(--paper); border-color:var(--line); box-shadow:0 2px 10px -6px rgba(15,36,30,.2);}
+  .cat-name{display:flex; align-items:center; gap:9px; font-weight:600; font-size:13.5px; color:var(--ink);}
+  .cat-dot{width:8px; height:8px; border-radius:50%; flex-shrink:0;}
+  .cat-dot.izin{background:var(--clay);}
+  .cat-dot.umum{background:var(--sage);}
+  .cat-dot.pengumuman{background:var(--gold);}
+  .cat-count{font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--ink-3); background:var(--mist-2); padding:2px 8px; border-radius:100px;}
+  .cat-item.on .cat-count{background:var(--mist);}
+  .cat-desc{font-size:11.5px; color:var(--ink-3); padding:0 14px 10px; margin-top:-4px;}
+
+  /* thread panel */
+  .thread-panel{background:var(--paper); border:1px solid var(--line); border-radius:16px; overflow:hidden; display:flex; flex-direction:column; min-height:560px;}
+  .thread-head{padding:20px 24px; border-bottom:1px solid var(--line); display:flex; justify-content:space-between; align-items:center;}
+  .thread-head h3{font-size:17px; font-weight:600;}
+  .thread-head p{font-size:12.5px; color:var(--ink-3); margin-top:3px;}
+
+  .messages{flex:1; padding:22px 24px; overflow-y:auto; max-height:460px;}
+  .msg{display:flex; gap:12px; margin-bottom:22px;}
+  .avatar{width:34px; height:34px; border-radius:50%; background:var(--sage); color:#fff; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; flex-shrink:0;}
+  .avatar.team{background:var(--pine);}
+  .msg-col{flex:1;}
+  .msg-name{display:flex; align-items:center; gap:8px; font-weight:600; font-size:13px; color:var(--pine-deep); margin-bottom:4px;}
+  .badge-team{background:var(--pine); color:#fff; font-size:9.5px; padding:2px 8px; border-radius:100px; font-family:'IBM Plex Mono',monospace; letter-spacing:.03em;}
+  .msg-time{font-weight:400; color:var(--ink-3); font-size:11.5px;}
+  .msg-bubble{background:var(--mist-2); border-radius:12px; border-top-left-radius:4px; padding:11px 14px; font-size:13.5px; line-height:1.55; color:var(--ink); max-width:520px;}
+  .msg-bubble.team{background:var(--sage-bg);}
+  .msg-img{margin-top:8px; border-radius:10px; max-width:220px; border:1px solid var(--line);}
+
+  .composer{border-top:1px solid var(--line); padding:16px 24px; display:flex; gap:10px; align-items:flex-end;}
+  .composer textarea{flex:1; resize:none; border:1px solid var(--line); border-radius:12px; padding:12px 14px; font-size:13.5px; min-height:44px; max-height:100px; background:var(--mist); color:var(--ink);}
+  .composer textarea:focus{outline:2px solid var(--pine); outline-offset:-1px;}
+  .icon-btn{width:44px; height:44px; border-radius:12px; border:1px solid var(--line); background:var(--mist); display:flex; align-items:center; justify-content:center; font-size:17px; flex-shrink:0;}
+  .send-btn{padding:0 20px; height:44px; border-radius:12px; background:var(--pine); color:#fff; border:0; font-weight:600; font-size:13.5px; flex-shrink:0;}
+
+  .locked{padding:60px 24px; text-align:center; color:var(--ink-3); font-size:13.5px;}
+  .locked button{margin-top:14px; padding:12px 22px; background:var(--pine); color:#fff; border:0; border-radius:10px; font-weight:600; font-size:13.5px;}
+
+  /* login modal */
+  .modal-overlay{position:fixed; inset:0; background:rgba(15,24,20,.55); z-index:300; display:none; align-items:center; justify-content:center; padding:20px;}
+  .modal-overlay.open{display:flex;}
+  .modal{background:var(--paper); border-radius:18px; padding:28px; max-width:380px; width:100%;}
+  .modal h3{font-size:18px; margin-bottom:6px;}
+  .modal p{font-size:13px; color:var(--ink-2); margin-bottom:20px; line-height:1.5;}
+  .modal label{display:block; font-size:12.5px; font-weight:600; color:var(--ink-2); margin-bottom:6px;}
+  .modal input{width:100%; padding:11px 13px; border:1px solid var(--line); border-radius:10px; margin-bottom:14px; font-size:13.5px; background:var(--mist);}
+  .modal-btn{width:100%; padding:12px; background:var(--pine); color:#fff; border:0; border-radius:10px; font-weight:600; font-size:13.5px;}
+
+  @media (max-width:860px){
+    .f-body{grid-template-columns:1fr;}
+    .cat-list{flex-direction:row; overflow-x:auto; padding-bottom:4px;}
+    .cat-item{flex-shrink:0;}
+    .cat-desc{display:none;}
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="brand">
+      <span class="brand-mark">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 12L12 4l9 8" stroke="#F2EFE6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M5.5 10.5V19a1 1 0 0 0 1 1H10v-5h4v5h3.5a1 1 0 0 0 1-1v-8.5" stroke="#F2EFE6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+      KKN-T 34
+    </div>
+    <div class="nav-links">
+      <a href="index.html">Beranda</a>
+      <a href="direktori.html">Direktori</a>
+      <a href="media.html">Media</a>
+      <a href="#" class="active">Forum</a>
+      <a href="tentang.html">Tentang Kami</a>
+    </div>
+    <a href="direktori.html" class="nav-cta">Cek Status Izin</a>
+  </div>
+</nav>
+
+<div class="wrap">
+  <div class="f-head">
+    <div>
+      <div class="eyebrow">Ruang Diskusi</div>
+      <h1>Forum</h1>
+    </div>
+    <div class="who" id="who-box">
+      <span>Belum masuk sebagai siapa pun</span>
+      <button id="btn-login">Masuk untuk ikut diskusi</button>
+    </div>
+  </div>
+
+  <div class="f-body">
+    <div>
+      <div class="cat-list" id="cat-list"></div>
+    </div>
+
+    <div class="thread-panel">
+      <div class="thread-head">
+        <div>
+          <h3 id="th-title">Tanya Izin Usaha</h3>
+          <p id="th-desc">Tanya apa saja soal NIB, Sertifikat Standar Usaha, dan alur OSS.</p>
+        </div>
+      </div>
+      <div class="messages" id="messages"></div>
+
+      <div id="composer-area"></div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <h3>Masuk ke Forum</h3>
+    <p>Cukup isi nama dan nomor HP — tidak perlu password. Ini membantu tim mengenali siapa yang bertanya.</p>
+    <label>Nama</label>
+    <input id="in-name" type="text" placeholder="Contoh: Raya Rizali">
+    <label>Nomor HP</label>
+    <input id="in-phone" type="text" placeholder="Contoh: 0812xxxxxxx">
+    <button class="modal-btn" id="do-login">Masuk</button>
+  </div>
+</div>
+
+<script>
+const CATS = [
+  {id:'izin', dot:'izin', name:'Tanya Izin Usaha', desc:'Tanya apa saja soal NIB, Sertifikat Standar Usaha, dan alur OSS.'},
+  {id:'umum', dot:'umum', name:'Diskusi Umum', desc:'Obrolan bebas seputar usaha homestay dan villa di Kota Batu.'},
+  {id:'pengumuman', dot:'pengumuman', name:'Pengumuman Tim', desc:'Info resmi dan jadwal kegiatan dari tim KKN, satu arah dari tim.'},
+];
+
+// ====== SUMBER DATA: GOOGLE SHEETS (lihat SETUP_GOOGLE_SHEETS.md) ======
+// Tab "Forum" kolom: kategori (izin/umum/pengumuman), name, team (TRUE/FALSE), time, text
+const SHEET_ID = "1ihYXCjaVtsBzPI_RVZx3JJh4sB_sN_d8od9FWuCd064";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxB7D2CHe92Wbi8WygPlyQn7tjDjeKsQkmfsP6lrk-7MeTh36IjFfrltB6oS_Tyt4H7vw/exec";
+const FORUM_TAB = "Forum";
+
+async function fetchSheetTab(tabName){
+  const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(tabName)}`;
+  const res = await fetch(url);
+  if(!res.ok) throw new Error('Gagal mengambil data dari Google Sheets');
+  return parseCSV(await res.text());
+}
+
+function parseCSV(text){
+  const rows = []; let row = [], field = '', inQuotes = false;
+  for(let i=0;i<text.length;i++){
+    const c = text[i], next = text[i+1];
+    if(inQuotes){
+      if(c==='"' && next==='"'){ field+='"'; i++; }
+      else if(c==='"'){ inQuotes=false; }
+      else field+=c;
+    } else {
+      if(c==='"') inQuotes=true;
+      else if(c===','){ row.push(field); field=''; }
+      else if(c==='\n' || c==='\r'){
+        if(field!=='' || row.length){ row.push(field); rows.push(row); row=[]; field=''; }
+        if(c==='\r' && next==='\n') i++;
+      } else field+=c;
+    }
+  }
+  if(field!=='' || row.length){ row.push(field); rows.push(row); }
+  if(!rows.length) return [];
+  const headers = rows.shift().map(h=>h.trim());
+  return rows.filter(r=>r.some(v=>v!=='')).map(r=>{
+    const obj = {}; headers.forEach((h,idx)=> obj[h] = (r[idx]||'').trim()); return obj;
+  });
+}
+
+async function loadThreads(){
+  const empty = {izin:[], umum:[], pengumuman:[]};
+  try{
+    const rows = await fetchSheetTab(FORUM_TAB);
+    rows.forEach(r=>{
+      const cat = (r.kategori||'umum').toLowerCase();
+      if(!empty[cat]) return;
+      empty[cat].push({ name:r.name||'Anonim', team:/^true$/i.test(r.team), time:r.time||'-', text:r.text||'' });
+    });
+    return empty;
+  } catch(err){ console.error(err); return empty; }
+}
+
+async function submitToSheet(sheetName, data){
+  try{
+    await fetch(SCRIPT_URL, {
+      method:'POST',
+      headers:{'Content-Type':'text/plain;charset=utf-8'},
+      body: JSON.stringify({sheet: sheetName, data})
+    });
+    return true;
+  } catch(err){ console.error(err); return false; }
+}
+// ====== AKHIR SUMBER DATA ======
+
+let THREADS = { izin:[], umum:[], pengumuman:[] };
+
+let currentCat = 'izin';
+let user = null; // {name, phone}
+
+const catListEl = document.getElementById('cat-list');
+function renderCats(){
+  catListEl.innerHTML = CATS.map(c=>`
+    <div class="cat-item ${c.id===currentCat?'on':''}" data-id="${c.id}">
+      <span class="cat-name"><span class="cat-dot ${c.dot}"></span>${c.name}</span>
+      <span class="cat-count mono">${THREADS[c.id].length}</span>
+    </div>
+  `).join('');
+  catListEl.querySelectorAll('.cat-item').forEach(el=>{
+    el.addEventListener('click', ()=>{ currentCat = el.dataset.id; renderCats(); renderThread(); });
+  });
+}
+
+function initials(name){
+  return name.split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase();
+}
+
+function renderThread(){
+  const cat = CATS.find(c=>c.id===currentCat);
+  document.getElementById('th-title').textContent = cat.name;
+  document.getElementById('th-desc').textContent = cat.desc;
+
+  const msgWrap = document.getElementById('messages');
+  if(THREADS[currentCat].length === 0){
+    msgWrap.innerHTML = '<div style="padding:30px; text-align:center; color:var(--ink-3); font-size:13px;">Belum ada pesan di kanal ini. Jadilah yang pertama bertanya.</div>';
+  } else {
+  msgWrap.innerHTML = THREADS[currentCat].map(m=>`
+    <div class="msg">
+      <div class="avatar ${m.team?'team':''}">${m.team?'T':initials(m.name)}</div>
+      <div class="msg-col">
+        <div class="msg-name">${m.name} ${m.team?'<span class="badge-team">TIM KKN</span>':''} <span class="msg-time">${m.time}</span></div>
+        <div class="msg-bubble ${m.team?'team':''}">${m.text}${m.img?`<img class="msg-img" src="${m.img}">`:''}</div>
+      </div>
+    </div>
+  `).join('');
+  }
+  msgWrap.scrollTop = msgWrap.scrollHeight;
+
+  renderComposer();
+}
+
+function renderComposer(){
+  const area = document.getElementById('composer-area');
+  if(currentCat === 'pengumuman' && !(user && user.isTeam)){
+    area.innerHTML = `<div class="locked">Kanal ini khusus pengumuman resmi dari tim KKN — hanya tim yang bisa mengirim pesan di sini.</div>`;
+    return;
+  }
+  if(!user){
+    area.innerHTML = `<div class="locked">Masuk dulu untuk ikut berdiskusi.<br><button id="lock-login">Masuk ke Forum</button></div>`;
+    document.getElementById('lock-login').addEventListener('click', openModal);
+    return;
+  }
+  area.innerHTML = `
+    <div class="composer">
+      <label class="icon-btn" title="Lampirkan foto">
+        📎
+        <input type="file" accept="image/*" id="file-input" style="display:none;">
+      </label>
+      <textarea id="msg-input" placeholder="Tulis pertanyaan atau tanggapan..."></textarea>
+      <button class="send-btn" id="send-btn">Kirim</button>
+    </div>
+  `;
+  let pendingImg = null;
+  document.getElementById('file-input').addEventListener('change', e=>{
+    const f = e.target.files[0];
+    if(f){ pendingImg = URL.createObjectURL(f); }
+  });
+  document.getElementById('send-btn').addEventListener('click', async ()=>{
+    const val = document.getElementById('msg-input').value.trim();
+    if(!val && !pendingImg) return;
+    const sendBtn = document.getElementById('send-btn');
+    const newMsg = {
+      name:user.name, team:user.isTeam, time:'Baru saja',
+      text:val || '(mengirim foto)', img:pendingImg
+    };
+    sendBtn.disabled = true;
+    const ok = await submitToSheet('Forum', {kategori:currentCat, name:newMsg.name, team:newMsg.team, time:new Date().toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'}), text:newMsg.text});
+    sendBtn.disabled = false;
+    if(!ok) console.warn('Google Sheets belum disambungkan — pesan ini cuma tampil sementara, belum tersimpan permanen.');
+    THREADS[currentCat].push(newMsg);
+    pendingImg = null;
+    renderCats();
+    renderThread();
+  });
+}
+
+function openModal(){ document.getElementById('modal').classList.add('open'); }
+function closeModal(){ document.getElementById('modal').classList.remove('open'); }
+
+document.getElementById('btn-login').addEventListener('click', openModal);
+document.getElementById('do-login').addEventListener('click', ()=>{
+  const name = document.getElementById('in-name').value.trim();
+  const phone = document.getElementById('in-phone').value.trim();
+  if(!name || !phone) return;
+  const isTeam = /tim kkn/i.test(name);
+  user = {name, phone, isTeam};
+  document.getElementById('who-box').innerHTML = `
+    <span class="av">${initials(name)}</span>
+    <span>Masuk sebagai <b>${name}</b></span>
+  `;
+  closeModal();
+  renderComposer();
+});
+
+(async function init(){
+  document.getElementById('messages').innerHTML = '<div style="padding:30px; text-align:center; color:var(--ink-3); font-size:13px;">Memuat pesan...</div>';
+  THREADS = await loadThreads();
+  renderCats();
+  renderThread();
+})();
+</script>
+</body>
+</html>
