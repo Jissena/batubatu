@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0"/>
+<link rel="icon" href="https://i.ibb.co.com/DJfSd2F/LOGO-TES.jpg">
+<title>Operasional — Dashboard Tim</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --pine:#1C3B32; --pine-deep:#0F241E; --pine-mid:#2B4F44;
+    --clay:#A8552E; --clay-bg:#F5E4DA;
+    --mist:#F2EFE6; --mist-2:#E8E1CE; --paper:#FBF9F3;
+    --gold:#C99A3E; --gold-bg:#F6EAD1;
+    --ink:#22241F; --ink-2:#5A5C52; --ink-3:#8B8D80;
+    --sage:#7C9683; --sage-bg:#E3E9E1; --line:#D8D2BE;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{background:var(--mist); color:var(--ink); font-family:'Work Sans',sans-serif; -webkit-font-smoothing:antialiased; display:flex; min-height:100vh;}
+  h1,h2,h3{font-family:'Fraunces',serif; color:var(--pine-deep); letter-spacing:-0.01em;}
+  .mono{font-family:'IBM Plex Mono',monospace;}
+  a{color:inherit; text-decoration:none;}
+  button,input,select{font-family:inherit;}
+  button{cursor:pointer;}
+
+  .sidebar{width:230px; flex-shrink:0; background:var(--pine-deep); color:rgba(255,255,255,.75); min-height:100vh; padding:22px 16px; display:flex; flex-direction:column;}
+  .s-brand{display:flex; align-items:center; gap:9px; font-family:'Fraunces',serif; font-weight:600; font-size:16px; color:#fff; padding:6px 8px 26px;}
+  .s-brand-icon{width:26px; height:26px; border-radius:50%; background:#fff; overflow:hidden; display:flex; align-items:center; justify-content:center; flex-shrink:0;}
+  .s-brand-icon img{width:100%; height:100%; object-fit:cover; transform:scale(1.35);}
+  .s-brand .dot{width:8px; height:8px; border-radius:50%; background:var(--gold);}
+  .s-tag{font-family:'IBM Plex Mono',monospace; font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:rgba(255,255,255,.4); padding:0 8px 14px;}
+  .s-nav a{display:flex; align-items:center; gap:10px; padding:11px 12px; border-radius:9px; font-size:13.5px; font-weight:500; margin-bottom:3px; color:rgba(255,255,255,.65);}
+  .s-nav a:hover{background:rgba(255,255,255,.06); color:#fff;}
+  .s-nav a.active{background:rgba(255,255,255,.12); color:#fff; font-weight:600;}
+  .s-nav .ic{width:18px; text-align:center;}
+  .s-divider{height:1px; background:rgba(255,255,255,.1); margin:16px 4px;}
+  .s-back{margin-top:auto; font-size:12.5px; color:rgba(255,255,255,.45); padding:10px 12px;}
+  .s-back:hover{color:#fff;}
+
+  .main{flex:1; min-width:0; padding:28px 32px 60px;}
+  .eyebrow{font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--sage); margin-bottom:8px;}
+  .main h1{font-size:26px; font-weight:600; margin-bottom:22px;}
+
+  .stat-row{display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-bottom:28px;}
+  .stat{background:var(--paper); border:1px solid var(--line); border-radius:14px; padding:18px 20px;}
+  .stat-num{font-family:'Fraunces',serif; font-size:26px; font-weight:600; color:var(--pine-deep);}
+  .stat-label{font-size:12px; color:var(--ink-2); margin-top:4px;}
+
+  .panel{background:var(--paper); border:1px solid var(--line); border-radius:16px; padding:24px; margin-bottom:24px;}
+  .panel-head{display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; flex-wrap:wrap; gap:10px;}
+  .panel-head h3{font-size:16px; font-weight:600;}
+  select.unit-sel{padding:9px 12px; border:1px solid var(--line); border-radius:9px; background:var(--mist); font-size:13px;}
+
+  /* calendar */
+  .cal-head{display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;}
+  .cal-nav{display:flex; gap:8px; align-items:center;}
+  .cal-nav button{width:30px; height:30px; border-radius:8px; border:1px solid var(--line); background:var(--mist); font-size:13px;}
+  .cal-month{font-weight:600; font-size:13.5px; color:var(--pine-deep); min-width:130px; text-align:center;}
+  .cal-grid{display:grid; grid-template-columns:repeat(7,1fr); gap:5px;}
+  .cal-dow{font-size:11px; text-align:center; color:var(--ink-3); padding-bottom:6px; font-weight:600;}
+  .cal-day{aspect-ratio:1; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:12.5px; background:var(--mist); color:var(--ink-2); cursor:pointer; border:1px solid transparent;}
+  .cal-day.empty{background:transparent; cursor:default;}
+  .cal-day.filled{background:var(--pine); color:#fff; font-weight:600;}
+  .cal-day.today{border-color:var(--clay);}
+  .cal-legend{display:flex; gap:16px; margin-top:14px; font-size:12px; color:var(--ink-2);}
+  .cal-legend span{display:flex; align-items:center; gap:6px;}
+  .cal-legend .sw{width:12px; height:12px; border-radius:4px;}
+  .sw.on{background:var(--pine);} .sw.off{background:var(--mist-2); border:1px solid var(--line);}
+
+  /* guest table */
+  .toolbar{display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:10px;}
+  .btn{padding:10px 16px; border-radius:9px; font-weight:600; font-size:13px; border:1px solid var(--line); background:var(--mist); color:var(--ink);}
+  .btn-primary{background:var(--pine); color:#fff; border-color:var(--pine);}
+  table{width:100%; border-collapse:collapse; font-size:13px;}
+  thead th{text-align:left; padding:11px 14px; background:var(--mist-2); font-size:11px; text-transform:uppercase; letter-spacing:.04em; color:var(--ink-2); font-weight:600;}
+  tbody td{padding:11px 14px; border-top:1px solid var(--line);}
+  .table-wrap{border:1px solid var(--line); border-radius:12px; overflow:hidden;}
+
+  .modal-overlay{position:fixed; inset:0; background:rgba(15,24,20,.55); z-index:300; display:none; align-items:center; justify-content:center; padding:20px;}
+  .modal-overlay.open{display:flex;}
+  .modal{background:var(--paper); border-radius:18px; padding:26px; max-width:420px; width:100%;}
+  .modal h3{font-size:17px; margin-bottom:18px;}
+  .modal label{display:block; font-size:12px; font-weight:600; color:var(--ink-2); margin-bottom:6px; margin-top:12px;}
+  .modal label:first-of-type{margin-top:0;}
+  .modal input, .modal select{width:100%; padding:10px 12px; border:1px solid var(--line); border-radius:9px; font-size:13px; background:var(--mist);}
+  .modal-actions{display:flex; gap:10px; margin-top:20px;}
+  .modal-actions .btn{flex:1; justify-content:center; text-align:center;}
+
+  @media (max-width:900px){
+    .sidebar{position:fixed; left:-230px; z-index:200;}
+    .stat-row{grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body>
+<div id="pw-gate" style="position:fixed; inset:0; z-index:9999; background:#1C3B32; display:flex; align-items:center; justify-content:center; padding:20px; font-family:'Work Sans', sans-serif;">
+  <div style="background:#FBF9F3; padding:34px 30px; border-radius:16px; max-width:340px; width:100%; text-align:center; box-shadow:0 10px 40px rgba(0,0,0,.3);">
+    <div style="font-size:28px; margin-bottom:10px;">🔒</div>
+    <div style="font-weight:700; font-size:17px; margin-bottom:6px; color:#1C3B32;">Akses Tim &amp; Dinas</div>
+    <div style="font-size:13px; color:#767267; margin-bottom:18px;">Masukkan password:</div>
+    <input id="pw-input" type="password" placeholder="Password" style="width:100%; padding:11px 13px; border:1px solid #ddd8ca; border-radius:9px; font-size:14px; margin-bottom:10px; box-sizing:border-box; font-family:inherit;">
+    <div id="pw-error" style="color:#A8552E; font-size:12px; margin-bottom:10px; display:none;">Password salah, coba lagi.</div>
+    <button id="pw-submit" style="width:100%; padding:11px; background:#C99A3E; color:#fff; border:0; border-radius:9px; font-weight:600; font-size:14px; cursor:pointer; font-family:inherit;">Masuk</button>
+    <a href="index.html" style="display:block; margin-top:14px; font-size:12.5px; color:#767267;">← Kembali ke situs publik</a>
+  </div>
+</div>
+<script>
+(function(){
+  // Ganti password default ini sebelum deploy! Bagikan hanya ke tim & DPMPTSP.
+  const PASSWORD = "kknt34batu";
+  const gate = document.getElementById('pw-gate');
+  if (sessionStorage.getItem('giz_auth') === 'ok') { gate.style.display = 'none'; return; }
+  function tryLogin(){
+    const val = document.getElementById('pw-input').value;
+    if (val === PASSWORD) {
+      sessionStorage.setItem('giz_auth', 'ok');
+      gate.style.display = 'none';
+    } else {
+      document.getElementById('pw-error').style.display = 'block';
+    }
+  }
+  document.getElementById('pw-submit').addEventListener('click', tryLogin);
+  document.getElementById('pw-input').addEventListener('keydown', e => { if(e.key==='Enter') tryLogin(); });
+})();
+</script>
+
+<aside class="sidebar">
+  <div class="s-brand"><span class="s-brand-icon"><img src="https://i.ibb.co.com/DJfSd2F/LOGO-TES.jpg" alt="Logo KKN-T 34"></span>KKN-T 34</div>
+  <div class="s-tag">Dashboard Tim</div>
+  <nav class="s-nav">
+    <a href="data-villa.html"><span class="ic">🏠</span>Data Villa</a>
+    <a href="#" class="active"><span class="ic">📅</span>Operasional</a>
+    <a href="laporan.html"><span class="ic">📊</span>Laporan & Pajak</a>
+  </nav>
+  <div class="s-divider"></div>
+  <a href="index.html" class="s-back">← Kembali ke situs publik</a>
+</aside>
+
+<div class="main">
+  <div class="eyebrow">Internal · Tim KKN & DPMPTSP</div>
+  <h1>Operasional</h1>
+
+  <div class="stat-row">
+    <div class="stat"><div class="stat-num">0%</div><div class="stat-label">Rata-rata okupansi bulan ini</div></div>
+    <div class="stat"><div class="stat-num">0</div><div class="stat-label">Tamu tercatat bulan ini</div></div>
+    <div class="stat"><div class="stat-num">—</div><div class="stat-label">Unit dengan okupansi tertinggi</div></div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-head">
+      <h3>Kalender Booking</h3>
+      <select class="unit-sel" id="unit-sel">
+        <option>Belum ada unit terdaftar</option>
+      </select>
+    </div>
+    <div class="cal-head">
+      <div class="cal-month mono" id="cal-month">Juli 2026</div>
+      <div class="cal-nav">
+        <button id="cal-prev">‹</button>
+        <button id="cal-next">›</button>
+      </div>
+    </div>
+    <div class="cal-grid" id="cal-grid"></div>
+    <div class="cal-legend">
+      <span><span class="sw on"></span>Terisi</span>
+      <span><span class="sw off"></span>Kosong</span>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="toolbar">
+      <h3>Buku Tamu Digital</h3>
+      <button class="btn btn-primary" id="btn-add-guest">+ Catat Tamu</button>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Nama Tamu</th><th>Asal</th><th>Unit</th><th>Check-in</th><th>Check-out</th></tr></thead>
+        <tbody id="guest-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <h3>Catat Tamu Baru</h3>
+    <label>Nama Tamu</label><input id="g-nama" placeholder="Contoh: Dewi Anggraini">
+    <label>Asal (Kota)</label><input id="g-asal" placeholder="Contoh: Surabaya">
+    <label>Unit</label>
+    <select id="g-unit"><option>Belum ada unit terdaftar</option></select>
+    <label>Tanggal Check-in</label><input id="g-in" type="date">
+    <label>Tanggal Check-out</label><input id="g-out" type="date">
+    <div class="modal-actions">
+      <button class="btn" id="g-cancel">Batal</button>
+      <button class="btn btn-primary" id="g-save">Simpan</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===== Calendar =====
+const filledDays = new Set(); // Tambahkan tanggal terisi di sini, contoh: new Set([2,3,4])
+let calMonth = 6, calYear = 2026; // Juli 2026 (0-indexed month=6)
+const monthNames = ["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
+const dow = ["Sen","Sel","Rab","Kam","Jum","Sab","Min"];
+
+function renderCal(){
+  document.getElementById('cal-month').textContent = `${monthNames[calMonth]} ${calYear}`;
+  const grid = document.getElementById('cal-grid');
+  const firstDay = new Date(calYear, calMonth, 1).getDay(); // 0=Sun
+  const offset = (firstDay+6)%7; // convert to Mon-start
+  const daysInMonth = new Date(calYear, calMonth+1, 0).getDate();
+
+  let html = dow.map(d=>`<div class="cal-dow">${d}</div>`).join('');
+  for(let i=0;i<offset;i++) html += `<div class="cal-day empty"></div>`;
+  for(let d=1; d<=daysInMonth; d++){
+    const filled = filledDays.has(d) && calMonth===6;
+    const today = (d===2 && calMonth===6);
+    html += `<div class="cal-day ${filled?'filled':''} ${today?'today':''}" data-d="${d}">${d}</div>`;
+  }
+  grid.innerHTML = html;
+
+  grid.querySelectorAll('.cal-day:not(.empty)').forEach(el=>{
+    el.addEventListener('click', ()=>{
+      const d = +el.dataset.d;
+      if(filledDays.has(d)) filledDays.delete(d); else filledDays.add(d);
+      renderCal();
+    });
+  });
+}
+document.getElementById('cal-prev').addEventListener('click', ()=>{ calMonth--; if(calMonth<0){calMonth=11; calYear--;} renderCal(); });
+document.getElementById('cal-next').addEventListener('click', ()=>{ calMonth++; if(calMonth>11){calMonth=0; calYear++;} renderCal(); });
+renderCal();
+
+// ====== SUMBER DATA: GOOGLE SHEETS (lihat SETUP_GOOGLE_SHEETS.md) ======
+const SHEET_ID = "1ihYXCjaVtsBzPI_RVZx3JJh4sB_sN_d8od9FWuCd064";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxB7D2CHe92Wbi8WygPlyQn7tjDjeKsQkmfsP6lrk-7MeTh36IjFfrltB6oS_Tyt4H7vw/exec";
+const TAMU_TAB = "Tamu";
+
+async function fetchSheetTab(tabName){
+  const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(tabName)}`;
+  const res = await fetch(url);
+  if(!res.ok) throw new Error('Gagal mengambil data dari Google Sheets');
+  return parseCSV(await res.text());
+}
+
+function parseCSV(text){
+  const rows = []; let row = [], field = '', inQuotes = false;
+  for(let i=0;i<text.length;i++){
+    const c = text[i], next = text[i+1];
+    if(inQuotes){
+      if(c==='"' && next==='"'){ field+='"'; i++; }
+      else if(c==='"'){ inQuotes=false; }
+      else field+=c;
+    } else {
+      if(c==='"') inQuotes=true;
+      else if(c===','){ row.push(field); field=''; }
+      else if(c==='\n' || c==='\r'){
+        if(field!=='' || row.length){ row.push(field); rows.push(row); row=[]; field=''; }
+        if(c==='\r' && next==='\n') i++;
+      } else field+=c;
+    }
+  }
+  if(field!=='' || row.length){ row.push(field); rows.push(row); }
+  if(!rows.length) return [];
+  const headers = rows.shift().map(h=>h.trim());
+  return rows.filter(r=>r.some(v=>v!=='')).map(r=>{
+    const obj = {}; headers.forEach((h,idx)=> obj[h] = (r[idx]||'').trim()); return obj;
+  });
+}
+
+async function loadGuests(){
+  try{
+    const rows = await fetchSheetTab(TAMU_TAB);
+    return rows.filter(r=>r.nama && r.unit).map(r=>({
+      nama:r.nama, asal:r.asal||'-', unit:r.unit||'-', in:r.in||'', out:r.out||'',
+    }));
+  } catch(err){ console.error(err); return []; }
+}
+
+async function submitToSheet(sheetName, data){
+  try{
+    await fetch(SCRIPT_URL, {
+      method:'POST',
+      headers:{'Content-Type':'text/plain;charset=utf-8'},
+      body: JSON.stringify({sheet: sheetName, data})
+    });
+    return true;
+  } catch(err){ console.error(err); return false; }
+}
+// ====== AKHIR SUMBER DATA ======
+
+// ===== Guest book =====
+let GUESTS = [];
+function fmt(d){ const dt=new Date(d); return isNaN(dt) ? '-' : dt.toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'}); }
+function renderGuests(){
+  if(GUESTS.length === 0){
+    document.getElementById('guest-tbody').innerHTML = `<tr><td colspan="5" style="text-align:center; color:var(--ink-3); padding:26px;">Belum ada tamu tercatat.</td></tr>`;
+    return;
+  }
+  document.getElementById('guest-tbody').innerHTML = GUESTS.map(g=>`
+    <tr><td>${g.nama}</td><td>${g.asal}</td><td>${g.unit}</td><td class="mono">${fmt(g.in)}</td><td class="mono">${fmt(g.out)}</td></tr>
+  `).join('');
+}
+
+const modal = document.getElementById('modal');
+document.getElementById('btn-add-guest').addEventListener('click', ()=>modal.classList.add('open'));
+document.getElementById('g-cancel').addEventListener('click', ()=>modal.classList.remove('open'));
+modal.addEventListener('click', e=>{ if(e.target===modal) modal.classList.remove('open'); });
+document.getElementById('g-save').addEventListener('click', async ()=>{
+  const nama = document.getElementById('g-nama').value.trim();
+  if(!nama) return;
+  const saveBtn = document.getElementById('g-save');
+  const newGuest = {
+    nama, asal: document.getElementById('g-asal').value || '-',
+    unit: document.getElementById('g-unit').value,
+    in: document.getElementById('g-in').value || new Date().toISOString().slice(0,10),
+    out: document.getElementById('g-out').value || '',
+  };
+  saveBtn.textContent = 'Menyimpan...'; saveBtn.disabled = true;
+  const ok = await submitToSheet('Tamu', newGuest);
+  saveBtn.textContent = 'Simpan'; saveBtn.disabled = false;
+  if(!ok){
+    alert('Google Sheets belum disambungkan (lihat SETUP_GOOGLE_SHEETS.md). Data ini hanya tampil sementara di layar, belum tersimpan permanen.');
+  }
+  GUESTS.unshift(newGuest);
+  renderGuests();
+  modal.classList.remove('open');
+});
+
+(async function init(){
+  document.getElementById('guest-tbody').innerHTML = `<tr><td colspan="5" style="text-align:center; color:var(--ink-3); padding:26px;">Memuat data...</td></tr>`;
+  GUESTS = await loadGuests();
+  renderGuests();
+})();
+</script>
+</body>
+</html>
