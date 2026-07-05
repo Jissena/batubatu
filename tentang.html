@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0"/>
+<link rel="icon" href="https://i.ibb.co.com/DJfSd2F/LOGO-TES.jpg">
+<title>Tentang Kami — KKN-T 34</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --pine:#1C3B32; --pine-deep:#0F241E; --pine-mid:#2B4F44;
+    --clay:#A8552E; --clay-light:#C97748; --clay-bg:#F5E4DA;
+    --mist:#F2EFE6; --mist-2:#E8E1CE; --paper:#FBF9F3;
+    --gold:#C99A3E; --gold-bg:#F6EAD1;
+    --ink:#22241F; --ink-2:#5A5C52; --ink-3:#8B8D80;
+    --sage:#7C9683; --sage-bg:#E3E9E1; --line:#D8D2BE;
+    --r:14px; --r-sm:9px;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{background:var(--mist); color:var(--ink); font-family:'Work Sans',sans-serif; -webkit-font-smoothing:antialiased;}
+  h1,h2,h3{font-family:'Fraunces',serif; color:var(--pine-deep); letter-spacing:-0.01em;}
+  .mono{font-family:'IBM Plex Mono',monospace;}
+  a{color:inherit; text-decoration:none;}
+  button,input,textarea{font-family:inherit;}
+  button{cursor:pointer;}
+
+  .nav{position:sticky; top:0; z-index:100; background:rgba(242,239,230,0.95); backdrop-filter:blur(8px); border-bottom:1px solid var(--line);}
+  .nav-inner{max-width:1180px; margin:0 auto; padding:14px 28px; display:flex; align-items:center; justify-content:space-between; gap:20px; position:relative;}
+  .brand{display:flex; align-items:center; gap:10px; font-family:'Fraunces',serif; font-weight:600; font-size:18px; color:var(--pine-deep);}
+  .brand-mark{width:32px; height:32px; border-radius:8px; background:#fff; border:1px solid var(--line); display:flex; align-items:center; justify-content:center; flex-shrink:0; overflow:hidden;}
+  .brand-mark img{width:100%; height:100%; object-fit:contain; padding:3px;}
+  .nav-links{display:flex; align-items:center; gap:6px; font-size:14px; font-weight:500;}
+  .nav-links a{padding:8px 13px; border-radius:8px; color:var(--ink-2); transition:background .15s, color .15s;}
+  .nav-links a:hover{background:var(--mist-2); color:var(--pine-deep);}
+  .nav-links a.active{color:var(--pine-deep); background:var(--paper); box-shadow:inset 0 0 0 1px var(--line);}
+  .nav-cta{padding:9px 16px; background:var(--clay); color:#fff; border-radius:8px; font-weight:600; font-size:13px; white-space:nowrap;}
+  .nav-toggle{display:none; flex-direction:column; gap:4px; background:none; border:0; cursor:pointer; padding:8px;}
+  .nav-toggle span{width:22px; height:2px; background:var(--pine-deep); border-radius:2px;}
+  @media (max-width:860px){
+    .nav-cta{display:none;}
+    .nav-toggle{display:flex;}
+    .nav-links{display:none; position:absolute; top:100%; left:16px; right:16px; flex-direction:column; align-items:stretch; gap:2px; background:var(--paper); border:1px solid var(--line); border-radius:12px; padding:10px; margin-top:6px; box-shadow:0 16px 32px -16px rgba(15,36,30,.35); z-index:110;}
+    .nav-links.open{display:flex;}
+    .nav-links a{padding:12px 14px;}
+  }
+
+  .wrap{max-width:1180px; margin:0 auto; padding:0 28px;}
+  .eyebrow{font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--sage); margin-bottom:10px;}
+  section{padding:56px 0;}
+  section + section{border-top:1px solid var(--line);}
+  .sec-head{max-width:560px; margin-bottom:32px;}
+  .sec-head h2{font-size:clamp(22px,2.8vw,28px); font-weight:600; margin-bottom:8px;}
+  .sec-head p{font-size:14px; color:var(--ink-2); line-height:1.6;}
+
+  /* ===== DPL ===== */
+  .dpl-card{display:grid; grid-template-columns:140px 1fr; gap:26px; align-items:center; background:var(--paper); border:1px solid var(--line); border-radius:18px; padding:28px;}
+  .dpl-photo{width:140px; height:140px; border-radius:16px; background:var(--pine); color:#fff; display:flex; align-items:center; justify-content:center; font-family:'Fraunces',serif; font-size:38px; font-weight:600; flex-shrink:0;}
+  .dpl-role{font-family:'IBM Plex Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.05em; color:var(--clay); margin-bottom:6px;}
+  .dpl-info h3{font-size:21px; margin-bottom:8px;}
+  .dpl-info p{font-size:14px; color:var(--ink-2); line-height:1.6; max-width:520px;}
+
+  /* ===== TEAM ===== */
+  .div-tabs{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:28px;}
+  .div-tab{padding:9px 16px; border-radius:100px; border:1px solid var(--line); background:var(--paper); font-size:13px; font-weight:600; color:var(--ink-2);}
+  .div-tab.on{background:var(--pine); color:#fff; border-color:var(--pine);}
+
+  .div-block{margin-bottom:38px;}
+  .div-block:last-child{margin-bottom:0;}
+  .div-title{display:flex; align-items:center; gap:10px; font-family:'IBM Plex Mono',monospace; font-size:12px; text-transform:uppercase; letter-spacing:.05em; color:var(--ink-3); margin-bottom:14px;}
+  .div-title .dot{width:8px; height:8px; border-radius:50%;}
+
+  .team-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:14px;}
+  .member{background:var(--paper); border:1px solid var(--line); border-radius:14px; padding:16px; cursor:pointer; transition:transform .15s, box-shadow .15s;}
+  .member:hover{transform:translateY(-2px); box-shadow:0 12px 26px -18px rgba(15,36,30,.4);}
+  .m-avatar{border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:'Fraunces',serif; font-weight:600; color:#fff; margin-bottom:12px;}
+  .m-avatar.m-avatar-grid{width:100%; aspect-ratio:1/1; border-radius:14px; font-size:28px;}
+  .m-avatar.m-avatar-modal{width:120px; height:120px; border-radius:16px; font-size:32px; margin-bottom:0;}
+  img.m-avatar{object-fit:cover; border:1px solid var(--line);}
+  .member h4{font-size:14px; font-weight:600; color:var(--ink); margin-bottom:3px; line-height:1.3;}
+  .member .role{font-size:11.5px; color:var(--clay); font-weight:600; margin-bottom:2px;}
+  .member .nim{font-size:11px; color:var(--ink-3);}
+
+  /* modal profile */
+  .modal-overlay{position:fixed; inset:0; background:rgba(15,24,20,.55); z-index:300; display:none; align-items:center; justify-content:center; padding:20px;}
+  .modal-overlay.open{display:flex;}
+  .modal{background:var(--paper); border-radius:18px; padding:28px; max-width:400px; width:100%; position:relative;}
+  .modal-close-x{position:absolute; top:16px; right:16px; width:32px; height:32px; border-radius:50%; border:1px solid var(--line); background:var(--mist); font-size:14px; color:var(--ink-2); display:flex; align-items:center; justify-content:center; cursor:pointer;}
+  .modal-avatar-wrap{margin-bottom:16px;}
+  .modal h3{font-size:19px; margin-bottom:4px;}
+  .modal .role{font-size:12.5px; color:var(--clay); font-weight:600; margin-bottom:2px;}
+  .modal .nim{font-size:12px; color:var(--ink-3); margin-bottom:18px;}
+  .modal-kegiatan{background:var(--mist-2); border-radius:10px; padding:14px; font-size:13px; line-height:1.5; color:var(--ink-2);}
+  .modal-kegiatan b{color:var(--pine-deep); display:block; margin-bottom:4px; font-size:12px; font-family:'IBM Plex Mono',monospace; text-transform:uppercase; letter-spacing:.03em;}
+  .modal-close{margin-top:18px; width:100%; padding:11px; background:var(--pine); color:#fff; border:0; border-radius:10px; font-weight:600; font-size:13px;}
+
+  /* ===== KONTAK ===== */
+  .kontak-grid{display:grid; grid-template-columns:1fr 1.2fr; gap:32px;}
+  .k-info-item{display:flex; gap:14px; margin-bottom:20px;}
+  .k-icon{width:38px; height:38px; border-radius:10px; background:var(--sage-bg); color:var(--pine); display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0;}
+  .k-info-item b{display:block; font-size:13.5px; color:var(--ink); margin-bottom:2px;}
+  .k-info-item span{font-size:13px; color:var(--ink-2);}
+  .social-row{display:flex; gap:10px; margin-top:20px;}
+  .social-row a{width:38px; height:38px; border-radius:10px; background:var(--paper); border:1px solid var(--line); display:flex; align-items:center; justify-content:center; font-size:15px; color:var(--pine-deep);}
+
+  .form-card{background:var(--paper); border:1px solid var(--line); border-radius:16px; padding:26px;}
+  .form-card label{display:block; font-size:12.5px; font-weight:600; color:var(--ink-2); margin-bottom:6px; margin-top:14px;}
+  .form-card label:first-child{margin-top:0;}
+  .form-card input, .form-card textarea{width:100%; padding:11px 13px; border:1px solid var(--line); border-radius:10px; font-size:13.5px; background:var(--mist); color:var(--ink);}
+  .form-card textarea{resize:vertical; min-height:90px;}
+  .form-btn{margin-top:20px; width:100%; padding:13px; background:var(--clay); color:#fff; border:0; border-radius:10px; font-weight:600; font-size:14px;}
+  .form-ok{margin-top:14px; background:var(--sage-bg); color:var(--pine-deep); padding:11px 14px; border-radius:10px; font-size:13px; display:none;}
+  .form-ok.show{display:block;}
+
+  @media (max-width:860px){
+    .dpl-card{grid-template-columns:1fr; text-align:center;}
+    .dpl-photo{margin:0 auto;}
+    .team-grid{grid-template-columns:repeat(2,1fr);}
+    .kontak-grid{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="brand">
+      <span class="brand-mark"><img src="https://i.ibb.co.com/DJfSd2F/LOGO-TES.jpg" alt="Logo KKN-T 34"></span>
+      KKN-T 34
+    </div>
+    <div class="nav-links">
+      <a href="index.html">Beranda</a>
+      <a href="direktori.html">Villa & Homestay</a>
+      <a href="media.html">Media</a>
+      <a href="forum.html">Forum</a>
+      <a href="#" class="active">Tentang Kami</a>
+    </div>
+    <a href="direktori.html" class="nav-cta">Cek Status Izin</a>
+    <button class="nav-toggle" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <!-- DPL -->
+  <section>
+    <div class="eyebrow">Pembimbing Lapangan</div>
+    <div class="dpl-card">
+      <img class="dpl-photo" src="https://i.ibb.co.com/4n9bMR5N/FIA-UB-Day-1-225-scaled-e1666963298796-jpg.jpg" alt="Dr. Supriono, S.Sos, MAB" style="object-fit:cover;">
+      <div class="dpl-info">
+        <div class="dpl-role">Dosen Pembimbing Lapangan</div>
+        <h3>Dr. Supriono, S.Sos, MAB</h3>
+        <p>Membimbing KKN-T 34 FIA UB dalam merancang dan menjalankan program pendataan serta pendampingan perizinan usaha villa & homestay di Kota Batu, bekerja sama dengan DPMPTSP Kota Batu.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- TIM -->
+  <section id="tim">
+    <div class="sec-head">
+      <div class="eyebrow">Tim Kami</div>
+      <h2>17 mahasiswa, satu tujuan yang sama</h2>
+      <p>Setiap anggota memegang tugas dan luaran masing-masing. Klik salah satu untuk melihat kegiatan yang mereka kerjakan.</p>
+    </div>
+    <div id="team-wrap"></div>
+  </section>
+
+  <!-- KONTAK -->
+  <section id="kontak">
+    <div class="sec-head">
+      <div class="eyebrow">Hubungi Kami</div>
+      <h2>Ada pertanyaan seputar izin homestay Anda?</h2>
+      <p>Kirim pesan lewat form ini, atau datang langsung ke posko tim KKN kami.</p>
+    </div>
+    <div class="kontak-grid">
+      <div>
+        <div class="k-info-item">
+          <div class="k-icon">📍</div>
+          <div><b>Lokasi</b><span>Posko KKN-T 34, Kota Batu, Jawa Timur</span></div>
+        </div>
+        <div class="k-info-item">
+          <div class="k-icon">✉️</div>
+          <div><b>Email</b><span>kkn34.fiaub@ub.ac.id</span></div>
+        </div>
+        <div class="k-info-item">
+          <div class="k-icon">📞</div>
+          <div><b>Telepon / WhatsApp</b><span>+62 8xx-xxxx-xxxx</span></div>
+        </div>
+        <div class="social-row">
+          <a href="#">IG</a><a href="#">FB</a><a href="#">TT</a>
+        </div>
+      </div>
+
+      <div class="form-card">
+        <form id="contact-form">
+          <label>Nama</label>
+          <input type="text" id="tc-nama" required>
+          <label>Nomor HP</label>
+          <input type="text" id="tc-hp" required>
+          <label>Pesan</label>
+          <textarea id="tc-pesan" required placeholder="Tulis pertanyaan atau kebutuhan pendampingan Anda..."></textarea>
+          <button type="submit" class="form-btn" id="tc-submit">Kirim Pesan</button>
+          <div class="form-ok" id="form-ok">Pesan terkirim — tim kami akan menghubungi Anda secepatnya.</div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <button class="modal-close-x" id="m-close">✕</button>
+    <div class="modal-avatar-wrap" id="m-avatar-wrap"></div>
+    <div class="role" id="m-role"></div>
+    <h3 id="m-name"></h3>
+    <div class="nim" id="m-nim"></div>
+    <div class="modal-kegiatan">
+      <b>Kegiatan Individu</b>
+      <span id="m-kegiatan"></span>
+    </div>
+  </div>
+</div>
+
+<script>
+// ====== FOTO ANGGOTA TIM ======
+// Tiap anggota punya field foto:"" — isi dengan LINK GAMBAR LANGSUNG kalau mau pasang foto asli.
+// Kalau foto:"" dibiarkan kosong, otomatis tampil bulatan warna + inisial nama (seperti sekarang).
+//
+// CATATAN: Google Drive TIDAK disarankan untuk ini — sering diblokir kalau dipasang di
+// website luar (hotlink protection), meskipun sharing-nya sudah "Anyone with the link".
+//
+// CARA YANG TERBUKTI JALAN — pakai ibb.co atau imgur.com (gratis, tanpa akun):
+// 1. Buka ibb.co atau imgur.com
+// 2. Upload foto
+// 3. Klik kanan foto yang sudah keupload > "Copy image address" / "Copy direct link"
+// 4. Tempel langsung ke foto:"...", tidak perlu diubah format apapun.
+const DIVISIONS = [
+  {
+    name:"Koordinasi", dot:"var(--pine)", color:"var(--pine)",
+    members:[
+      {name:"Ilham Kusuma", role:"Koordinator Desa", nim:"245030207111060", kegiatan:"Menyusun laporan kepatuhan perizinan (before–after status izin) dan menjembatani kemitraan dengan DPMPTSP.", foto:"https://i.ibb.co.com/Y4VckCNM/Ilham-Kordes.png"},
+      {name:"Nandita Ryan", role:"Wakil Koordinator Desa", nim:"245030200111014", kegiatan:"Menyusun laporan kepatuhan perizinan dan mengoordinasikan data antar divisi.", foto:"https://i.ibb.co.com/twB8Mgj1/Rian-Wakordes.png"},
+      {name:"Azzahra Fahlefy", role:"Sekretaris 1", nim:"245030207111028", kegiatan:"Menyusun materi edukasi syarat izin (NIB akomodasi & Sertifikat Standar Usaha Pariwisata).", foto:"https://i.ibb.co.com/ccvMkbpg/Joy-Sekretaris.png"},
+      {name:"Fathatul Ula Alhajjah", role:"Sekretaris 2", nim:"245030207111040", kegiatan:"Membuat infografis alur perizinan usaha homestay melalui OSS.", foto:"https://i.ibb.co.com/LdCmMQ14/Ula-Sekretaris.png"},
+      {name:"Michael Wilbert Gozali", role:"Bendahara 1", nim:"245030201111064", kegiatan:"Mengolah dan menganalisis data hasil pendataan villa & homestay.", foto:"https://i.ibb.co.com/Y4sZP8R5/Michael-Bendahara.png"},
+      {name:"Christiano Matthew Setyotomo", role:"Bendahara 2", nim:"245030200111091", kegiatan:"Mendokumentasikan kegiatan sosialisasi dan pendampingan perizinan.", foto:"https://i.ibb.co.com/G3RvRTng/Matthew-Bendahara.png"},
+    ]
+  },
+  {
+    name:"Acara", dot:"var(--clay)", color:"var(--clay)",
+    members:[
+      {name:"Nazlin Ocsa Syaenri", role:"Koordinator Acara", nim:"245030207111058", kegiatan:"Memproduksi naskah & pengambilan video tutorial pendaftaran NIB via OSS.", foto:"https://i.ibb.co.com/67b4zdg9/Nazlin-Acara.png"},
+      {name:"Bella Purnamasari", role:"Staff Acara", nim:"245030207111005", kegiatan:"Melakukan pendataan villa & homestay di wilayah survei kelompok A.", foto:"https://i.ibb.co.com/9mp65mr3/Bella-Acara.png"},
+      {name:"Suci Zahra Rabbani", role:"Staff Acara", nim:"245030201111019", kegiatan:"Melakukan pendataan villa & homestay di wilayah survei kelompok B.", foto:"https://i.ibb.co.com/RpwgzH7D/Suci-Acara.png"},
+      {name:"Melia Tanza Imansari", role:"Staff Acara", nim:"245030207111003", kegiatan:"Mendesain infografis hasil pemetaan villa & homestay.", foto:"https://i.ibb.co.com/hxQbq7Dv/Melia-Acara.png"},
+    ]
+  },
+  {
+    name:"Humas", dot:"var(--gold)", color:"var(--gold)",
+    members:[
+      {name:"Amelfinda Aprilia Mirabai", role:"Koordinator Humas", nim:"245030201111079", kegiatan:"Memimpin sosialisasi kemudahan perizinan usaha (OSS) kepada pemilik homestay.", foto:"https://i.ibb.co.com/0pbSfrXF/Finda-Humas.png"},
+      {name:"Atikah Suciwati", role:"Staff Humas", nim:"245030201111075", kegiatan:"Mendampingi langsung pendaftaran NIB untuk kelompok usaha A.", foto:"https://i.ibb.co.com/4Z4Pfy2g/Cici-Humas.png"},
+      {name:"Ella Narlisya Majid", role:"Staff Humas", nim:"245030201111072", kegiatan:"Mendampingi langsung pendaftaran NIB untuk kelompok usaha B.", foto:"https://i.ibb.co.com/cSmjqQsm/Ela-Humas.png"},
+    ]
+  },
+  {
+    name:"PDD", dot:"var(--sage)", color:"var(--sage)",
+    members:[
+      {name:"Fairuz Raditya Qilby", role:"Koordinator PDD", nim:"245030201111035", kegiatan:"Membangun peta digital sebaran villa & homestay hasil pendataan.", foto:"https://i.ibb.co.com/TMYT0tRb/Fairuz-Pdd.png"},
+      {name:"Azzayanna Syam Fazira Siregar", role:"Staff PDD", nim:"245030207111087", kegiatan:"Mengelola galeri dokumentasi dan publikasi konten media sosial.", foto:"https://i.ibb.co.com/VYRyqx24/Zira-Pdd.png"},
+      {name:"Alifah Marda Zilviah", role:"Staff PDD", nim:"245030207111015", kegiatan:"Mendesain infografis hasil pemetaan dan alur perizinan.", foto:"https://i.ibb.co.com/fVzD8kK4/Alifah-Pdd.png"},
+      {name:"Surya Jagad Sasena", role:"Staff PDD", nim:"245030207111073", kegiatan:"Mengedit dan mempublikasikan video tutorial perizinan ke YouTube.", foto:"https://i.ibb.co.com/69XBN2g/Surya-Pdd.png"},
+    ]
+  },
+];
+
+function initials(name){ return name.split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase(); }
+
+function avatarHtml(m, color, mode){
+  const cls = mode === 'modal' ? 'm-avatar-modal' : 'm-avatar-grid';
+  return m.foto
+    ? `<img class="m-avatar ${cls}" src="${m.foto}" alt="${m.name}">`
+    : `<div class="m-avatar ${cls}" style="background:${color};">${initials(m.name)}</div>`;
+}
+
+const wrap = document.getElementById('team-wrap');
+wrap.innerHTML = DIVISIONS.map(d=>`
+  <div class="div-block">
+    <div class="div-title"><span class="dot" style="background:${d.color}"></span>${d.name} (${d.members.length} orang)</div>
+    <div class="team-grid">
+      ${d.members.map(m=>`
+        <div class="member" data-name="${m.name}">
+          ${avatarHtml(m, d.color, 'grid')}
+          <h4>${m.name}</h4>
+          <div class="role">${m.role}</div>
+          <div class="nim mono">${m.nim}</div>
+        </div>
+      `).join('')}
+    </div>
+  </div>
+`).join('');
+
+const allMembers = DIVISIONS.flatMap(d=>d.members.map(m=>({...m, color:d.color})));
+const modal = document.getElementById('modal');
+wrap.querySelectorAll('.member').forEach(el=>{
+  el.addEventListener('click', ()=>{
+    const m = allMembers.find(x=>x.name===el.dataset.name);
+    document.getElementById('m-avatar-wrap').innerHTML = avatarHtml(m, m.color, 'modal');
+    document.getElementById('m-role').textContent = m.role;
+    document.getElementById('m-name').textContent = m.name;
+    document.getElementById('m-nim').textContent = m.nim;
+    document.getElementById('m-kegiatan').textContent = m.kegiatan;
+    modal.classList.add('open');
+  });
+});
+document.getElementById('m-close').addEventListener('click', ()=>modal.classList.remove('open'));
+modal.addEventListener('click', e=>{ if(e.target===modal) modal.classList.remove('open'); });
+
+// ====== SUMBER DATA: GOOGLE SHEETS (lihat SETUP_GOOGLE_SHEETS.md) ======
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxB7D2CHe92Wbi8WygPlyQn7tjDjeKsQkmfsP6lrk-7MeTh36IjFfrltB6oS_Tyt4H7vw/exec";
+
+document.getElementById('contact-form').addEventListener('submit', async e=>{
+  e.preventDefault();
+  const btn = document.getElementById('tc-submit');
+  const originalText = btn.textContent;
+  btn.textContent = 'Mengirim...'; btn.disabled = true;
+
+  const data = {
+    id: 'k' + Date.now().toString(36) + Math.random().toString(36).slice(2,7),
+    waktu: new Date().toISOString().slice(0,16).replace('T',' '),
+    nama: document.getElementById('tc-nama').value.trim(),
+    hp: document.getElementById('tc-hp').value.trim(),
+    pesan: document.getElementById('tc-pesan').value.trim(),
+    status: '',
+  };
+
+  try{
+    await fetch(SCRIPT_URL, {
+      method: 'POST',
+      headers: {'Content-Type':'text/plain;charset=utf-8'},
+      body: JSON.stringify({ sheet: 'Kontak', data }),
+    });
+  } catch(err){ console.error(err); }
+
+  btn.textContent = originalText; btn.disabled = false;
+  document.getElementById('form-ok').classList.add('show');
+  e.target.reset();
+});
+
+// ====== MENU MOBILE ======
+(function(){
+  const toggle = document.querySelector('.nav-toggle');
+  const links = document.querySelector('.nav-links');
+  if(!toggle || !links) return;
+  toggle.addEventListener('click', ()=> links.classList.toggle('open'));
+  links.querySelectorAll('a').forEach(a=> a.addEventListener('click', ()=> links.classList.remove('open')));
+  document.addEventListener('click', (e)=>{
+    if(!links.contains(e.target) && !toggle.contains(e.target)) links.classList.remove('open');
+  });
+})();
+</script>
+</body>
+</html>

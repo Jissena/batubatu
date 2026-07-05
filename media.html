@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0"/>
+<link rel="icon" href="https://i.ibb.co.com/DJfSd2F/LOGO-TES.jpg">
+<title>Media — KKN-T 34</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --pine:#1C3B32; --pine-deep:#0F241E; --pine-mid:#2B4F44;
+    --clay:#A8552E; --clay-light:#C97748; --clay-bg:#F5E4DA;
+    --mist:#F2EFE6; --mist-2:#E8E1CE; --paper:#FBF9F3;
+    --gold:#C99A3E; --gold-bg:#F6EAD1;
+    --ink:#22241F; --ink-2:#5A5C52; --ink-3:#8B8D80;
+    --sage:#7C9683; --sage-bg:#E3E9E1; --line:#D8D2BE;
+    --r:14px; --r-sm:9px;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{background:var(--mist); color:var(--ink); font-family:'Work Sans',sans-serif; -webkit-font-smoothing:antialiased;}
+  h1,h2,h3{font-family:'Fraunces',serif; color:var(--pine-deep); letter-spacing:-0.01em;}
+  .mono{font-family:'IBM Plex Mono',monospace;}
+  a{color:inherit; text-decoration:none;}
+  button{font-family:inherit; cursor:pointer;}
+  img{max-width:100%; display:block;}
+
+  /* NAV */
+  .nav{position:sticky; top:0; z-index:100; background:rgba(242,239,230,0.95); backdrop-filter:blur(8px); border-bottom:1px solid var(--line);}
+  .nav-inner{max-width:1180px; margin:0 auto; padding:14px 28px; display:flex; align-items:center; justify-content:space-between; gap:20px; position:relative;}
+  .brand{display:flex; align-items:center; gap:10px; font-family:'Fraunces',serif; font-weight:600; font-size:18px; color:var(--pine-deep);}
+  .brand-mark{width:32px; height:32px; border-radius:8px; background:#fff; border:1px solid var(--line); display:flex; align-items:center; justify-content:center; flex-shrink:0; overflow:hidden;}
+  .brand-mark img{width:100%; height:100%; object-fit:contain; padding:3px;}
+  .nav-links{display:flex; align-items:center; gap:6px; font-size:14px; font-weight:500;}
+  .nav-links a{padding:8px 13px; border-radius:8px; color:var(--ink-2); transition:background .15s, color .15s;}
+  .nav-links a:hover{background:var(--mist-2); color:var(--pine-deep);}
+  .nav-links a.active{color:var(--pine-deep); background:var(--paper); box-shadow:inset 0 0 0 1px var(--line);}
+  .nav-cta{padding:9px 16px; background:var(--clay); color:#fff; border-radius:8px; font-weight:600; font-size:13px; white-space:nowrap;}
+  .nav-toggle{display:none; flex-direction:column; gap:4px; background:none; border:0; cursor:pointer; padding:8px;}
+  .nav-toggle span{width:22px; height:2px; background:var(--pine-deep); border-radius:2px;}
+  @media (max-width:860px){
+    .nav-cta{display:none;}
+    .nav-toggle{display:flex;}
+    .nav-links{display:none; position:absolute; top:100%; left:16px; right:16px; flex-direction:column; align-items:stretch; gap:2px; background:var(--paper); border:1px solid var(--line); border-radius:12px; padding:10px; margin-top:6px; box-shadow:0 16px 32px -16px rgba(15,36,30,.35); z-index:110;}
+    .nav-links.open{display:flex;}
+    .nav-links a{padding:12px 14px;}
+  }
+
+  .wrap{max-width:1180px; margin:0 auto; padding:0 28px;}
+
+  /* HEADER + TOGGLE */
+  .m-head{padding:36px 0 22px; display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:18px;}
+  .eyebrow{font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--sage); margin-bottom:8px;}
+  .m-head h1{font-size:clamp(24px,3vw,32px); font-weight:600;}
+  .toggle{display:flex; background:var(--mist-2); border-radius:100px; padding:4px; border:1px solid var(--line);}
+  .toggle button{padding:10px 22px; border:0; background:none; border-radius:100px; font-size:13.5px; font-weight:600; color:var(--ink-2); transition:background .15s,color .15s;}
+  .toggle button.on{background:var(--pine); color:#fff;}
+
+  /* ===== GALERI ===== */
+  #view-galeri{display:block;}
+  .album-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:20px; padding-bottom:60px;}
+  .album{border-radius:16px; overflow:hidden; border:1px solid var(--line); background:var(--paper); cursor:pointer; transition:transform .15s, box-shadow .15s;}
+  .album:hover{transform:translateY(-3px); box-shadow:0 16px 32px -18px rgba(15,36,30,.35);}
+  .album-cover{position:relative; aspect-ratio:4/3; overflow:hidden; background:var(--mist-2);}
+  .album-cover img{width:100%; height:100%; object-fit:cover;}
+  .album-count{position:absolute; bottom:10px; right:10px; background:rgba(15,36,30,.75); color:#fff; font-family:'IBM Plex Mono',monospace; font-size:11px; padding:4px 9px; border-radius:100px;}
+  .album-info{padding:14px 16px;}
+  .album-tag{font-family:'IBM Plex Mono',monospace; font-size:10.5px; text-transform:uppercase; letter-spacing:.04em; color:var(--sage); margin-bottom:5px;}
+  .album-info h4{font-size:15px; font-weight:600; color:var(--ink); font-family:'Work Sans',sans-serif; margin-bottom:4px;}
+  .album-info span{font-size:12px; color:var(--ink-3);}
+
+  /* lightbox */
+  .lb{position:fixed; inset:0; background:rgba(15,24,20,.92); z-index:200; display:none; align-items:center; justify-content:center; padding:40px;}
+  .lb.open{display:flex;}
+  .lb-inner{max-width:900px; width:100%;}
+  .lb-head{display:flex; justify-content:space-between; align-items:center; color:#fff; margin-bottom:16px;}
+  .lb-head h3{color:#fff; font-size:18px;}
+  .lb-close{background:rgba(255,255,255,.12); border:0; color:#fff; width:34px; height:34px; border-radius:50%; font-size:16px;}
+  .lb-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:10px; max-height:65vh; overflow-y:auto;}
+  .lb-grid img{width:100%; aspect-ratio:1; object-fit:cover; border-radius:8px;}
+
+  /* ===== ARTIKEL ===== */
+  #view-artikel{display:none;}
+  .art-filter{display:flex; gap:8px; padding-bottom:22px; flex-wrap:wrap;}
+  .chip{padding:9px 16px; border-radius:100px; border:1px solid var(--line); background:var(--paper); font-size:13px; font-weight:600; color:var(--ink-2);}
+  .chip.on{background:var(--pine); color:#fff; border-color:var(--pine);}
+  .art-list{display:flex; flex-direction:column; gap:16px; padding-bottom:60px;}
+  .art-row{display:grid; grid-template-columns:220px 1fr; gap:20px; background:var(--paper); border:1px solid var(--line); border-radius:16px; overflow:hidden; cursor:pointer; transition:box-shadow .15s;}
+  .art-row:hover{box-shadow:0 14px 30px -20px rgba(15,36,30,.35);}
+  .art-thumb{aspect-ratio:4/3; background:var(--mist-2); overflow:hidden;}
+  .art-thumb img{width:100%; height:100%; object-fit:cover;}
+  .art-body{padding:18px 20px 18px 0; display:flex; flex-direction:column; justify-content:center;}
+  .art-tag{font-family:'IBM Plex Mono',monospace; font-size:10.5px; text-transform:uppercase; letter-spacing:.04em; color:var(--clay); margin-bottom:6px;}
+  .art-body h3{font-size:18px; font-weight:600; margin-bottom:6px; line-height:1.3;}
+  .art-body p{font-size:13.5px; color:var(--ink-2); line-height:1.55; margin-bottom:10px;}
+  .art-meta{font-size:12px; color:var(--ink-3); display:flex; gap:12px;}
+
+  /* article detail modal */
+  .art-modal-overlay{position:fixed; inset:0; background:rgba(15,24,20,.65); z-index:200; display:none; align-items:flex-start; justify-content:center; padding:40px 20px; overflow-y:auto;}
+  .art-modal-overlay.open{display:flex;}
+  .art-modal{background:var(--paper); border-radius:18px; max-width:680px; width:100%; padding:32px 32px 36px; position:relative; margin-top:10px;}
+  .art-modal-close{position:absolute; top:18px; right:18px; width:34px; height:34px; border-radius:50%; border:1px solid var(--line); background:var(--mist); font-size:15px; color:var(--ink-2); display:flex; align-items:center; justify-content:center;}
+  .art-modal-thumb{width:100%; aspect-ratio:16/9; object-fit:cover; border-radius:12px; margin-bottom:20px;}
+  .art-modal h2{font-size:24px; margin-bottom:8px; line-height:1.3;}
+  .art-modal .art-meta{margin-bottom:22px;}
+  .art-modal-body{font-size:14.5px; line-height:1.75; color:var(--ink);}
+  .art-modal-body p{margin-bottom:14px;}
+  .art-modal-body h3{font-size:18px; margin:22px 0 10px; color:var(--pine-deep);}
+  .art-modal-body ul{margin:0 0 14px 20px; padding:0;}
+  .art-modal-body li{margin-bottom:6px;}
+  .art-modal-body blockquote{border-left:3px solid var(--clay); background:var(--mist); padding:12px 16px; margin:0 0 14px; border-radius:8px; font-style:italic; color:var(--ink-2);}
+  .art-modal-inline-img{width:100%; border-radius:12px; margin:6px 0 18px; display:block;}
+
+  @media (max-width:860px){
+    .album-grid{grid-template-columns:1fr 1fr;}
+    .art-row{grid-template-columns:1fr;}
+    .art-thumb{aspect-ratio:16/9;}
+    .art-body{padding:16px;}
+    .lb-grid{grid-template-columns:repeat(2,1fr);}
+  }
+  @media (max-width:560px){
+    .album-grid{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="brand">
+      <span class="brand-mark"><img src="https://i.ibb.co.com/DJfSd2F/LOGO-TES.jpg" alt="Logo KKN-T 34"></span>
+      KKN-T 34
+    </div>
+    <div class="nav-links">
+      <a href="index.html">Beranda</a>
+      <a href="direktori.html">Villa & Homestay</a>
+      <a href="#" class="active">Media</a>
+      <a href="forum.html">Forum</a>
+      <a href="tentang.html">Tentang Kami</a>
+    </div>
+    <a href="direktori.html" class="nav-cta">Cek Status Izin</a>
+    <button class="nav-toggle" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<div class="wrap">
+  <div class="m-head">
+    <div>
+      <div class="eyebrow">Dokumentasi & Publikasi</div>
+      <h1>Media</h1>
+    </div>
+    <div class="toggle">
+      <button class="on" id="btn-galeri">Foto</button>
+      <button id="btn-artikel">Artikel</button>
+    </div>
+  </div>
+
+  <!-- GALERI -->
+  <div id="view-galeri">
+    <div class="album-grid" id="album-grid"></div>
+  </div>
+
+  <!-- ARTIKEL -->
+  <div id="view-artikel">
+    <div class="art-filter" id="art-filter"></div>
+    <div class="art-list" id="art-list"></div>
+  </div>
+</div>
+
+<div class="lb" id="lb">
+  <div class="lb-inner">
+    <div class="lb-head">
+      <h3 id="lb-title"></h3>
+      <button class="lb-close" id="lb-close">✕</button>
+    </div>
+    <div class="lb-grid" id="lb-grid"></div>
+  </div>
+</div>
+
+<div class="art-modal-overlay" id="art-modal-overlay">
+  <div class="art-modal">
+    <button class="art-modal-close" id="art-modal-close">✕</button>
+    <img class="art-modal-thumb" id="art-modal-thumb" src="" alt="">
+    <div class="art-tag" id="art-modal-tag"></div>
+    <h2 id="art-modal-title"></h2>
+    <div class="art-meta" id="art-modal-meta"></div>
+    <div class="art-modal-body" id="art-modal-body"></div>
+  </div>
+</div>
+
+<script>
+// ====== SUMBER DATA: GOOGLE SHEETS (lihat SETUP_GOOGLE_SHEETS.md) ======
+// Tab "Album" kolom: title, tag, date, seed, n (jumlah foto)
+// Tab "Artikel" kolom: tag, title, excerpt, date, read, seed
+const SHEET_ID = "1ihYXCjaVtsBzPI_RVZx3JJh4sB_sN_d8od9FWuCd064";
+const ALBUM_TAB = "Album";
+const ARTIKEL_TAB = "Artikel";
+
+async function fetchSheetTab(tabName){
+  const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(tabName)}`;
+  const res = await fetch(url);
+  if(!res.ok) throw new Error('Gagal mengambil data dari Google Sheets');
+  return parseCSV(await res.text());
+}
+
+function parseCSV(text){
+  const rows = []; let row = [], field = '', inQuotes = false;
+  for(let i=0;i<text.length;i++){
+    const c = text[i], next = text[i+1];
+    if(inQuotes){
+      if(c==='"' && next==='"'){ field+='"'; i++; }
+      else if(c==='"'){ inQuotes=false; }
+      else field+=c;
+    } else {
+      if(c==='"') inQuotes=true;
+      else if(c===','){ row.push(field); field=''; }
+      else if(c==='\n' || c==='\r'){
+        if(field!=='' || row.length){ row.push(field); rows.push(row); row=[]; field=''; }
+        if(c==='\r' && next==='\n') i++;
+      } else field+=c;
+    }
+  }
+  if(field!=='' || row.length){ row.push(field); rows.push(row); }
+  if(!rows.length) return [];
+  const headers = rows.shift().map(h=>h.trim());
+  return rows.filter(r=>r.some(v=>v!=='')).map(r=>{
+    const obj = {}; headers.forEach((h,idx)=> obj[h] = (r[idx]||'').trim()); return obj;
+  });
+}
+
+async function loadAlbums(){
+  try{
+    return (await fetchSheetTab(ALBUM_TAB)).filter(r=>r.title).map((r,i)=>({
+      id:i+1, title:r.title, tag:r.tag||'-', date:r.date||'-', seed:r.seed||`album${i}`, n:Number(r.n)||1,
+    }));
+  } catch(err){ console.error(err); return []; }
+}
+
+async function loadArticles(){
+  try{
+    return (await fetchSheetTab(ARTIKEL_TAB)).filter(r=>r.title).map((r,i)=>({
+      tag:r.tag||'-', title:r.title, excerpt:r.excerpt||'', isi:r.isi||'', date:r.date||'-', read:r.read||'-', seed:r.seed||`art${i}`,
+      images: [r.gambar1, r.gambar2, r.gambar3, r.gambar4, r.gambar5].map(g=>(g||'').trim()).filter(Boolean).slice(0,5),
+    }));
+  } catch(err){ console.error(err); return []; }
+}
+// ====== AKHIR SUMBER DATA ======
+
+let ALBUMS = [];
+const grid = document.getElementById('album-grid');
+const lb = document.getElementById('lb');
+
+function renderAlbums(){
+  grid.innerHTML = ALBUMS.length ? ALBUMS.map(a=>`
+    <div class="album" data-id="${a.id}">
+      <div class="album-cover">
+        <img src="https://picsum.photos/seed/${a.seed}/500/375" alt="${a.title}">
+        <div class="album-count mono">${a.n} foto</div>
+      </div>
+      <div class="album-info">
+        <div class="album-tag">${a.tag}</div>
+        <h4>${a.title}</h4>
+        <span>${a.date}</span>
+      </div>
+    </div>
+  `).join('') : '<div style="grid-column:1/-1; padding:40px; text-align:center; color:var(--ink-3); font-size:13px; background:var(--paper); border:1px solid var(--line); border-radius:14px;">Belum ada album foto.</div>';
+
+  grid.querySelectorAll('.album').forEach(el=>{
+    el.addEventListener('click', ()=>{
+      const a = ALBUMS.find(x=>x.id==el.dataset.id);
+      document.getElementById('lb-title').textContent = a.title;
+      document.getElementById('lb-grid').innerHTML = Array.from({length:a.n}).map((_,i)=>
+        `<img src="https://picsum.photos/seed/${a.seed}${i}/300/300">`
+      ).join('');
+      lb.classList.add('open');
+    });
+  });
+}
+document.getElementById('lb-close').addEventListener('click', ()=>lb.classList.remove('open'));
+lb.addEventListener('click', e=>{ if(e.target===lb) lb.classList.remove('open'); });
+
+let ARTICLES = [];
+const filterWrap = document.getElementById('art-filter');
+
+function renderArticles(cat){
+  const list = cat==="Semua" ? ARTICLES : ARTICLES.filter(a=>a.tag===cat);
+  if(list.length === 0){
+    document.getElementById('art-list').innerHTML = '<div style="padding:40px; text-align:center; color:var(--ink-3); font-size:13px; background:var(--paper); border:1px solid var(--line); border-radius:14px;">Belum ada artikel.</div>';
+    return;
+  }
+  document.getElementById('art-list').innerHTML = list.map((a,idx)=>`
+    <div class="art-row" data-idx="${ARTICLES.indexOf(a)}">
+      <div class="art-thumb"><img src="${a.images[0] || `https://picsum.photos/seed/${a.seed}/400/300`}" alt="${a.title}"></div>
+      <div class="art-body">
+        <div class="art-tag">${a.tag}</div>
+        <h3>${a.title}</h3>
+        <p>${a.excerpt}</p>
+        <div class="art-meta"><span>${a.date}</span><span>${a.read} baca</span></div>
+      </div>
+    </div>
+  `).join('');
+  document.querySelectorAll('.art-row').forEach(el=>{
+    el.addEventListener('click', ()=> openArticle(ARTICLES[+el.dataset.idx]));
+  });
+}
+
+const artModal = document.getElementById('art-modal-overlay');
+
+// ====== LAYOUT OTOMATIS ISI ARTIKEL ======
+// Tiap baris (Enter) di kolom "isi" jadi 1 blok. Baris yang diawali:
+//   "## "  -> sub-judul
+//   "- "   -> item daftar (baris "- " berurutan digabung jadi satu list)
+//   "> "   -> kutipan
+// baris biasa -> paragraf
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function parseArticleBlocks(text){
+  const lines = text.split(/\n+/).map(l=>l.trim()).filter(Boolean);
+  const blocks = [];
+  let listBuf = [];
+  const flushList = ()=>{
+    if(listBuf.length){ blocks.push(`<ul>${listBuf.map(li=>`<li>${escapeHtml(li)}</li>`).join('')}</ul>`); listBuf = []; }
+  };
+  lines.forEach(line=>{
+    if(line.startsWith('## ')){
+      flushList();
+      blocks.push(`<h3>${escapeHtml(line.slice(3))}</h3>`);
+    } else if(line.startsWith('- ')){
+      listBuf.push(line.slice(2));
+    } else if(line.startsWith('> ')){
+      flushList();
+      blocks.push(`<blockquote>${escapeHtml(line.slice(2))}</blockquote>`);
+    } else {
+      flushList();
+      blocks.push(`<p>${escapeHtml(line)}</p>`);
+    }
+  });
+  flushList();
+  return blocks;
+}
+
+// Susun blok teks + sisipan gambar (gambar1 dipakai sebagai cover, sisanya disebar rata di antara paragraf)
+function layoutArticleBody(text, inlineImages){
+  const blocks = text ? parseArticleBlocks(text) : [];
+  if(!blocks.length){
+    return '<p style="color:var(--ink-3);">Isi lengkap artikel ini belum ditambahkan. Lengkapi kolom "isi" di tab Artikel pada spreadsheet.</p>';
+  }
+  if(!inlineImages.length) return blocks.join('');
+
+  const gap = Math.max(2, Math.ceil((blocks.length+1) / (inlineImages.length+1)));
+  let out = '', imgIdx = 0;
+  blocks.forEach((b,i)=>{
+    out += b;
+    if((i+1) % gap === 0 && imgIdx < inlineImages.length){
+      out += `<img class="art-modal-inline-img" src="${inlineImages[imgIdx]}" alt="">`;
+      imgIdx++;
+    }
+  });
+  while(imgIdx < inlineImages.length){
+    out += `<img class="art-modal-inline-img" src="${inlineImages[imgIdx]}" alt="">`;
+    imgIdx++;
+  }
+  return out;
+}
+
+function openArticle(a){
+  const cover = a.images[0] || `https://picsum.photos/seed/${a.seed}/700/400`;
+  const inlineImages = a.images.length > 1 ? a.images.slice(1) : [];
+  document.getElementById('art-modal-thumb').src = cover;
+  document.getElementById('art-modal-tag').textContent = a.tag;
+  document.getElementById('art-modal-title').textContent = a.title;
+  document.getElementById('art-modal-meta').innerHTML = `<span>${a.date}</span><span>${a.read} baca</span>`;
+  document.getElementById('art-modal-body').innerHTML = layoutArticleBody(a.isi, inlineImages);
+  artModal.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeArticle(){
+  artModal.classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.getElementById('art-modal-close').addEventListener('click', closeArticle);
+artModal.addEventListener('click', e=>{ if(e.target===artModal) closeArticle(); });
+
+function setupArtFilter(){
+  const cats = ["Semua", ...new Set(ARTICLES.map(a=>a.tag))];
+  filterWrap.innerHTML = cats.map((c,i)=>`<button class="chip ${i===0?'on':''}" data-cat="${c}">${c}</button>`).join('');
+  filterWrap.querySelectorAll('.chip').forEach(c=>{
+    c.addEventListener('click', ()=>{
+      filterWrap.querySelectorAll('.chip').forEach(x=>x.classList.remove('on'));
+      c.classList.add('on');
+      renderArticles(c.dataset.cat);
+    });
+  });
+  renderArticles("Semua");
+}
+
+(async function init(){
+  grid.innerHTML = '<div style="grid-column:1/-1; padding:40px; text-align:center; color:var(--ink-3); font-size:13px;">Memuat...</div>';
+  [ALBUMS, ARTICLES] = await Promise.all([loadAlbums(), loadArticles()]);
+  renderAlbums();
+  setupArtFilter();
+})();
+
+// toggle Foto / Artikel
+const btnG = document.getElementById('btn-galeri');
+const btnA = document.getElementById('btn-artikel');
+const viewG = document.getElementById('view-galeri');
+const viewA = document.getElementById('view-artikel');
+btnG.addEventListener('click', ()=>{
+  btnG.classList.add('on'); btnA.classList.remove('on');
+  viewG.style.display='block'; viewA.style.display='none';
+});
+btnA.addEventListener('click', ()=>{
+  btnA.classList.add('on'); btnG.classList.remove('on');
+  viewA.style.display='block'; viewG.style.display='none';
+});
+
+// ====== MENU MOBILE ======
+(function(){
+  const toggle = document.querySelector('.nav-toggle');
+  const links = document.querySelector('.nav-links');
+  if(!toggle || !links) return;
+  toggle.addEventListener('click', ()=> links.classList.toggle('open'));
+  links.querySelectorAll('a').forEach(a=> a.addEventListener('click', ()=> links.classList.remove('open')));
+  document.addEventListener('click', (e)=>{
+    if(!links.contains(e.target) && !toggle.contains(e.target)) links.classList.remove('open');
+  });
+})();
+</script>
+</body>
+</html>
